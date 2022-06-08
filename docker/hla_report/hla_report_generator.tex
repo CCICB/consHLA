@@ -1,0 +1,182 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={disTIL HLA Report},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{disTIL HLA Report}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Patient NAMESPACE}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+\hypertarget{summary-of-clinically-relevant-hla-consensus-alleles}{%
+\section{Summary of Clinically Relevant HLA Consensus
+Alleles}\label{summary-of-clinically-relevant-hla-consensus-alleles}}
+
+\hypertarget{class-i}{%
+\subsection{Class-I}\label{class-i}}
+
+\begingroup\fontsize{9}{11}\selectfont
+
+\begin{tabular}{lll}
+\toprule
+HLA-A & HLA-B & HLA-C\\
+\midrule
+\cellcolor{gray!6}{03:01} & \cellcolor{gray!6}{39:01} & \cellcolor{gray!6}{12:03}\\
+31:01 & 35:03 & 04:01\\
+\bottomrule
+\end{tabular}
+\endgroup{}
+
+\hypertarget{class-ii}{%
+\subsection{Class-II}\label{class-ii}}
+
+\begingroup\fontsize{9}{11}\selectfont
+
+\begin{tabular}{lllllllll}
+\toprule
+HLA-DRA & HLA-DRB1 & HLA-DRB3 & HLA-DRB4 & HLA-DRB5 & HLA-DQA1 & HLA-DQB1 & HLA-DPA1 & HLA-DPB1\\
+\midrule
+\cellcolor{gray!6}{01:01} & \cellcolor{gray!6}{08:01} & \cellcolor{gray!6}{02:02} & \cellcolor{gray!6}{Not typed} & \cellcolor{gray!6}{Not typed} & \cellcolor{gray!6}{04:01} & \cellcolor{gray!6}{05:03} & \cellcolor{gray!6}{01:03} & \cellcolor{gray!6}{03:01}\\
+01:01 & 14:54 & 02:02 & Not typed & Not typed & 01:04 & 04:02 & 01:03 & 23:01\\
+\bottomrule
+\end{tabular}
+\endgroup{}
+
+\newpage
+
+\hypertarget{consensus-alleles}{%
+\section{Consensus Alleles}\label{consensus-alleles}}
+
+\begingroup\fontsize{9}{11}\selectfont
+
+\begin{tabular}{lll}
+\toprule
+HLA Gene & Allele 1 & Allele 2\\
+\midrule
+\textbf{\cellcolor{gray!6}{HLA-A}} & \textbf{\cellcolor{gray!6}{03:01:01}} & \textbf{\cellcolor{gray!6}{31:01:02}}\\
+\textbf{HLA-B} & \textbf{39:01:01} & \textbf{35:03:01}\\
+\textbf{\cellcolor{gray!6}{HLA-C}} & \textbf{\cellcolor{gray!6}{12:03:01}} & \textbf{\cellcolor{gray!6}{04:01:01}}\\
+\textbf{HLA-DRA} & \textbf{01:01:01} & \textbf{01:01:01}\\
+\textbf{\cellcolor{gray!6}{HLA-DRB1}} & \textbf{\cellcolor{gray!6}{08:01:03}} & \textbf{\cellcolor{gray!6}{14:54:01}}\\
+\addlinespace
+\textbf{HLA-DRB3} & \textbf{02:02:01} & \textbf{02:02:01}\\
+\textbf{\cellcolor{gray!6}{HLA-DRB4}} & \textbf{\cellcolor{gray!6}{Not typed}} & \textbf{\cellcolor{gray!6}{Not typed}}\\
+\textbf{HLA-DRB5} & \textbf{Not typed} & \textbf{Not typed}\\
+\textbf{\cellcolor{gray!6}{HLA-DQA1}} & \textbf{\cellcolor{gray!6}{04:01:01}} & \textbf{\cellcolor{gray!6}{01:04:01}}\\
+\textbf{HLA-DQB1} & \textbf{05:03:01} & \textbf{04:02:01}\\
+\addlinespace
+\textbf{\cellcolor{gray!6}{HLA-DPA1}} & \textbf{\cellcolor{gray!6}{01:03:01}} & \textbf{\cellcolor{gray!6}{01:03:01}}\\
+\textbf{HLA-DPB1} & \textbf{03:01:01} & \textbf{23:01}\\
+\cellcolor{gray!6}{HLA-DMA} & \cellcolor{gray!6}{01:01:01} & \cellcolor{gray!6}{01:01:01}\\
+HLA-DMB & 01:01:01 & 01:01:01\\
+\cellcolor{gray!6}{HLA-DOA} & \cellcolor{gray!6}{01:01:02} & \cellcolor{gray!6}{01:01:01}\\
+\addlinespace
+HLA-DOB & 01:01:01 & 01:01:01\\
+\cellcolor{gray!6}{HLA-DRB2} & \cellcolor{gray!6}{01:01} & \cellcolor{gray!6}{01:01}\\
+HLA-DRB6 & Not typed & Not typed\\
+\cellcolor{gray!6}{HLA-DRB7} & \cellcolor{gray!6}{Not typed} & \cellcolor{gray!6}{Not typed}\\
+HLA-DRB8 & Not typed & Not typed\\
+\addlinespace
+\cellcolor{gray!6}{HLA-DRB9} & \cellcolor{gray!6}{Not typed} & \cellcolor{gray!6}{Not typed}\\
+HLA-E & 01:01:01 & 01:03:02\\
+\cellcolor{gray!6}{HLA-F} & \cellcolor{gray!6}{01:03:01} & \cellcolor{gray!6}{01:01:01}\\
+HLA-G & 01:01:01 & 01:01:14\\
+\cellcolor{gray!6}{HLA-H} & \cellcolor{gray!6}{02:04} & \cellcolor{gray!6}{02:03}\\
+\addlinespace
+HLA-J & 01:01:01 & 01:01:01\\
+\cellcolor{gray!6}{HLA-K} & \cellcolor{gray!6}{01:01:01} & \cellcolor{gray!6}{01:03}\\
+HLA-L & 01:01:01 & 01:01:01\\
+\cellcolor{gray!6}{HLA-V} & \cellcolor{gray!6}{01:01:01} & \cellcolor{gray!6}{01:01:01}\\
+\bottomrule
+\end{tabular}
+\endgroup{}
+
+\hypertarget{appendix}{%
+\section{Appendix}\label{appendix}}
+
+\hypertarget{analysis-method}{%
+\subsection{Analysis Method}\label{analysis-method}}
+
+\end{document}
