@@ -4,3 +4,6 @@ intro here
 ## Components
 
 ## Running the workflow
+### Local with `cwltool`
+
+### Cloud platform
