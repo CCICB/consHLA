@@ -2,13 +2,15 @@
 intro here
 <br>
 ## Components
-
+what are the modules
+<br>
 ## Running the workflow
 ### Local with `cwltool`
 how to run it locally
 ### Cloud platform
 how to run it on the cloud i.e. CAVATICA
-### Test samples
+<br>
+#### Test samples
 Publicly available NGS data for two cell lines COLO829 and HCC1954 were used to demonstrate consHLA functionality. Download the files to validate consHLA installation. The expected output is provided in `./sample_output` 
 - COLO829 tumour WGS [link](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=DRR260182)
 - COLO829 germline WGS [link](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=DRR260183) 
