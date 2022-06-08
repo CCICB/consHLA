@@ -5,6 +5,8 @@ intro here
 what are the modules
 <br>
 ## Running the workflow
+### Requirements
+RAM, storage, etc
 ### Local with `cwltool`
 how to run it locally
 ### Cloud platform
@@ -18,7 +20,10 @@ Publicly available NGS data for two cell lines COLO829 and HCC1954 were used to 
 - HCC1954 tumour WGS [link](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=DRR260184)
 - HCC1954 germline WGS [link](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=DRR260185)
 
+## Funding
 
-### LICENSE
+## Development
+
+## LICENSE
 
 consHLA is a wrapper on HLA-HD and is protected by MIT open source software license. For commercial use of consHLA, please contact the author of [HLA-HD](https://www.genome.med.kyoto-u.ac.jp/HLA-HD/) to obtain a commercial license.  
