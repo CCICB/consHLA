@@ -1,14 +1,14 @@
 # consHLA
 intro here
 <br>
-## Components
-what are the modules
-<br>
+
 ## Running the workflow
 ### Requirements
-RAM, storage, etc
-### Local with `cwltool`
-how to run it locally
+inputs, RAM, storage, etc
+### Local 
+Running a `.cwl` workflow requires specific software. Here we pick `cwltool`. Install it following these [instructions](https://github.com/common-workflow-language/cwltool). `cwltool` usage is shown below where `[tool-or-workflow-description]` is the `.cwl` file and `[input-job-settings]` is a `.json` or `.yml` file specifying the input parameters. <br>
+`cwltool [tool-or-workflow-description] [input-job-settings]`
+
 ### Cloud platform
 how to run it on the cloud i.e. CAVATICA
 <br>
