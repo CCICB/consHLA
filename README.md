@@ -3,17 +3,31 @@ intro here
 <br>
 
 ## Running the workflow
-### Requirements
-inputs, RAM, storage, etc
-### Local 
-Running a `.cwl` workflow requires specific software. Here we pick `cwltool`. Install it following these [instructions](https://github.com/common-workflow-language/cwltool). `cwltool` usage is shown below where `[tool-or-workflow-description]` is the `.cwl` file and `[input-job-settings]` is a `.json` or `.yml` file specifying the input parameters. <br>
-```
-cwltool [tool-or-workflow-description] [input-job-settings]
-```
+### RAM Requirements (indicative only)
+RAM depend on input file size and whether subsampling is turned on. <br>
+For WGS results with 30x coverage: min RAM = 5Gb <br>
+For WGS results with 100x coverage and subsample to 30x: min RAM = 30Gb <br>
 
-### Cloud platform
-how to run it on the cloud i.e. CAVATICA
+### Cloud platforms (recommended)
+You can run the workflow on any cloud platform supporting CWL execution (i.e. [Cavatica](https://cavatica.sbgenomics.com/))
 <br>
+
+### Local 
+Running a `.cwl` workflow requires specific software. Here we pick `cwltool`. Install it following these [instructions](https://github.com/common-workflow-language/cwltool). `cwltool` usage is shown below <br>
+```
+cwltool cwl/consHLA.cwl sample_input.yml
+```
+You can run the whole or part of the consHLA workflow by specifing the `.cwl` file and supplying the correct `input.yml`
+
+
+## Output files 
+`*_sample1_hla.json`: HLA alleles typed from tumour WGS <br>
+`*_sample2_hla.json`: HLA alleles typed from germline WGS <br>
+`*_sample3_hla.json`: HLA alleles typed from tumour RNAseq <br>
+`*_threeSample_hla.consensus.clinSig.[json|txt]`: Consensus HLA alleles for clinically significant genes <br>
+`*_threeSample_hla.consensus.[json|txt]`: Consensus HLA alleles for all genes <br>
+
+
 ## Test samples
 Publicly available NGS data for two cell lines COLO829 and HCC1954 were used to demonstrate consHLA functionality. Download the files to validate consHLA installation. The expected output is provided in `./sample_output` 
 - COLO829 tumour WGS [link](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=DRR260182)
