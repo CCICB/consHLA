@@ -3,19 +3,22 @@ intro here
 <br>
 
 ## Running the workflow
-### Requirements
-inputs, RAM, storage, etc <br>
-#### Inputs
- 
+### RAM Requirements (indicative only)
+RAM depend on input file size and whether subsampling is turned on. <br>
+For WGS results with 30x coverage: min RAM = 5Gb <br>
+For WGS results with 100x coverage and subsample to 30x: min RAM = 30Gb <br>
+
+### Cloud platforms (recommended)
+You can run the workflow on any cloud platform supporting CWL execution (i.e. [Cavatica](https://cavatica.sbgenomics.com/))
+<br>
+
 ### Local 
 Running a `.cwl` workflow requires specific software. Here we pick `cwltool`. Install it following these [instructions](https://github.com/common-workflow-language/cwltool). `cwltool` usage is shown below <br>
 ```
 cwltool cwl/consHLA.cwl sample_input.yml
 ```
+You can run the whole or part of the consHLA workflow by specifing the `.cwl` file and supplying the correct `input.yml`
 
-### Cloud platform
-how to run it on the cloud i.e. CAVATICA
-<br>
 
 ## Output files 
 `*_sample1_hla.json`: HLA alleles typed from tumour WGS <br>
