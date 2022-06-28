@@ -36,6 +36,10 @@ Publicly available NGS data for two cell lines COLO829 and HCC1954 were used to 
 - HCC1954 tumour WGS [link](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=DRR260184)
 - HCC1954 germline WGS [link](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=DRR260185)
 
+## Runtime
+Runtime tested with 30x WGS and RNAseq with 180M reads on amazon cloud computing EC2 instances
+![Runtime analysis](/assests/figures/runtime_with_total.png)
+
 ## Funding
 
 ## Development
