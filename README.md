@@ -4,16 +4,27 @@ intro here
 
 ## Running the workflow
 ### Requirements
-inputs, RAM, storage, etc
+inputs, RAM, storage, etc <br>
+#### Inputs
+ 
 ### Local 
-Running a `.cwl` workflow requires specific software. Here we pick `cwltool`. Install it following these [instructions](https://github.com/common-workflow-language/cwltool). `cwltool` usage is shown below where `[tool-or-workflow-description]` is the `.cwl` file and `[input-job-settings]` is a `.json` or `.yml` file specifying the input parameters. <br>
+Running a `.cwl` workflow requires specific software. Here we pick `cwltool`. Install it following these [instructions](https://github.com/common-workflow-language/cwltool). `cwltool` usage is shown below <br>
 ```
-cwltool [tool-or-workflow-description] [input-job-settings]
+cwltool cwl/consHLA.cwl sample_input.yml
 ```
 
 ### Cloud platform
 how to run it on the cloud i.e. CAVATICA
 <br>
+
+## Output files 
+`*_sample1_hla.json`: HLA alleles typed from tumour WGS <br>
+`*_sample2_hla.json`: HLA alleles typed from germline WGS <br>
+`*_sample3_hla.json`: HLA alleles typed from tumour RNAseq <br>
+`*_threeSample_hla.consensus.clinSig.[json|txt]`: Consensus HLA alleles for clinically significant genes <br>
+`*_threeSample_hla.consensus.[json|txt]`: Consensus HLA alleles for all genes <br>
+
+
 ## Test samples
 Publicly available NGS data for two cell lines COLO829 and HCC1954 were used to demonstrate consHLA functionality. Download the files to validate consHLA installation. The expected output is provided in `./sample_output` 
 - COLO829 tumour WGS [link](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=DRR260182)
