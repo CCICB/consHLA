@@ -42,6 +42,7 @@ Runtime tested with 30x WGS and RNAseq with 180M reads on amazon cloud computing
 ![Runtime analysis](/assests/figures/runtime_with_total.png)
 
 ## Funding
+We would like to acknowledge Luminesce Alliance – Innovation for Children’s Health for its contribution and support. Luminesce Alliance, is a not-for-profit cooperative joint venture between the Sydney Children’s Hospitals Network, the Children’s Medical Research Institute, and the Children’s Cancer Institute. It has been established with the support of the NSW Government to coordinate and integrate paediatric research. Luminesce Alliance is also affiliated with the University of Sydney and the University of New South Wales Sydney.
 
 ## LICENSE
 
