@@ -10,12 +10,12 @@ def createArgParser():
     # Create argument parser
     description = "Parse HLA-HD final results files and determine consensus HLA type for each HLA gene."
     argparser = ArgumentParser(description = description)
-    argparser.add_argument('-s1', '--sample_1_results', required=True, dest='sample_1_results', type=str, 
-                           help='Path to sample 1 HLA-HD final results file')
-    argparser.add_argument('-s2', '--sample_2_results', required=True, dest='sample_2_results', type=str, 
-                           help='Path to sample 2 HLA-HD final results file')
-    argparser.add_argument('-s3', '--sample_3_results', required=False, dest='sample_3_results', type=str, 
-                           help='Path to (optional) sample 3 HLA-HD final results file')
+    argparser.add_argument('-tumour', '--tumour_results', required=True, dest='sample_1_results', type=str, 
+                           help='Path to tumour WGS HLA-HD final results file')
+    argparser.add_argument('-germline', '--germline_results', required=True, dest='sample_2_results', type=str, 
+                           help='Path to germline WGS HLA-HD final results file')
+    argparser.add_argument('-rnaseq', '--rnaseq_results', required=False, dest='sample_3_results', type=str, 
+                           help='Path to (optional) RNAseq HLA-HD final results file')
     argparser.add_argument('patient_id', type=str, 
                            help='Patient ID')
     
@@ -371,11 +371,11 @@ if __name__ == '__main__':
     # cons_matrix = consensus_matrix(consensus_df, s1_df)
 
     # Write all HLA samples to json files
-    s1_filename = args.patient_id + '_' + 'sample1_hla.json'
-    s2_filename = args.patient_id + '_' + 'sample2_hla.json'
+    s1_filename = args.patient_id + '_' + 'tumour_hla.json'
+    s2_filename = args.patient_id + '_' + 'germline_hla.json'
     write_to_json(df_to_dict(s1_df.reset_index()), s1_filename)
     write_to_json(df_to_dict(s2_df.reset_index()), s2_filename)
 
     if args.sample_3_results:
-        s3_filename = args.patient_id + '_' + 'sample3_hla.json'
+        s3_filename = args.patient_id + '_' + 'rnaseq_hla.json'
         write_to_json(df_to_dict(s3_df.reset_index()), s3_filename)

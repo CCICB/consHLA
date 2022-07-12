@@ -28,7 +28,7 @@ doc: |-
   In addition, a JSON file is generated containing the two/three sets of input HLA-HD results in a format consistent with that of the consensus allele JSONs.
 
   ## Docker
-  This tool uses the Docker image: `rachelbj/hlahd-consensus:2.0.0`.
+  This tool uses the Docker image: `alanwucci/consensus_parser:1.0.0`.
 
   ## Documentation
   - [HLA-HD](https://www.genome.med.kyoto-u.ac.jp/HLA-HD/)
@@ -36,7 +36,7 @@ doc: |-
 requirements:
 - class: ShellCommandRequirement
 - class: DockerRequirement
-  dockerPull: rachelbj/hlahd-consensus:2.0.0
+  dockerPull: alanwucci/consensus_parser:1.0.0
 
 inputs:
 - id: tumour_dna
@@ -44,7 +44,7 @@ inputs:
   doc: The final results text file produced by running HLA-HD on the tumour DNA sample.
   type: File
   inputBinding:
-    prefix: -s1
+    prefix: -tumour
     position: 0
     shellQuote: false
 - id: tumour_rna
@@ -52,7 +52,7 @@ inputs:
   doc: The final results text file produced by running HLA-HD on the tumour RNA sample.
   type: File?
   inputBinding:
-    prefix: -s3
+    prefix: -rnaseq
     position: 0
     shellQuote: false
 - id: normal_dna
@@ -60,7 +60,7 @@ inputs:
   doc: The final results text file produced by running HLA-HD on the normal DNA sample.
   type: File
   inputBinding:
-    prefix: -s2
+    prefix: -germline
     position: 0
     shellQuote: false
 - id: sample_name
@@ -79,37 +79,37 @@ outputs:
   type: File
   outputBinding:
     glob: '*Sample_hla.consensus.clinSig.json'
-- id: filtered_txt
+- id: consensus_txt
   label: HLA Consensus Text File
   doc: |-
     A text file containing a comma-separated list of consensus alleles for all typed HLA genes. Only includes alleles for which a consensus could be determined. All alleles are truncated to two-field accuracy. This file should be used as input for pVACseq.
   type: File
   outputBinding:
     glob: '*Sample_hla.consensus.trunc.txt'
-- id: sample1_json
+- id: tumour_json
   label: Sample 1 HLA-HD Results JSON
   doc: HLA-HD final results obtained from sample 1 and represented in JSON format.
   type: File
   outputBinding:
-    glob: '*sample1_hla.json'
+    glob: '*tumour_hla.json'
 - id: consensus_json
   label: HLA Consensus JSON
   doc: A JSON file containing cosnensus alleles for all typed HLA genes.
   type: File
   outputBinding:
     glob: '*Sample_hla.consensus.json'
-- id: sample2_json
+- id: germline_json
   label: Sample 2 HLA-HD Results JSON
   doc: HLA-HD final results obtained from sample 2 and represented in JSON format.
   type: File
   outputBinding:
-    glob: '*sample2_hla.json'
-- id: sample3_json
+    glob: '*germline_hla.json'
+- id: rnaseq_json
   label: Sample 3 HLA-HD Results JSON
   doc: HLA-HD final results obtained from sample 3 and represented in JSON format.
   type: File?
   outputBinding:
-    glob: '*sample3_hla.json'
+    glob: '*rnaseq_hla.json'
 - id: clin_sig_txt
   label: Clinically Significant HLA Genes Consensus Text File
   doc: |-
