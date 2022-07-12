@@ -13,8 +13,6 @@ doc: |-
 
   ## Documentation
   - [samtools](http://www.htslib.org/doc/samtools.html)
-$namespaces:
-  sbg: https://www.sevenbridges.com/
 
 requirements:
 - class: ShellCommandRequirement
@@ -85,7 +83,6 @@ inputs:
   inputBinding:
     position: 10
     shellQuote: false
-  sbg:fileTypes: BAM, SAM, CRAM
 - id: fast_bam_compression
   label: Fast BAM Compression
   doc: Whether the output file (which must be BAM format) should be compressed.
@@ -146,7 +143,6 @@ inputs:
     prefix: -L
     position: 0
     shellQuote: false
-  sbg:fileTypes: BED
 
 outputs:
 - id: output_alignment
@@ -185,7 +181,6 @@ outputs:
           return input_base + ext
       }
     outputEval: $(inheritMetadata(self, inputs.input_alignment))
-  sbg:fileTypes: BAM, SAM, CRAM
 
 baseCommand:
 - samtools
@@ -225,6 +220,3 @@ arguments:
     }
   shellQuote: false
 id: samtools_view
-sbg:toolkit: samtools
-sbg:toolkitVersion: '1.10'
-sbg:wrapperAuthor: Rachel Bowen-James <rbowen-james@ccia.org.au>, Weilin Wu <wwu@ccia.org.au>

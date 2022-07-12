@@ -21,8 +21,6 @@ doc: |-
   ### Other notes
   - This tool uses the HLA dictionary created from release 3.15.0 of the [IPD-IMGT/HLA](https://github.com/ANHIG/IMGTHLA) database.
   - This tool by default uses HLA allele frequency data included with the HLA-HD release 1.4.0.
-$namespaces:
-  sbg: https://www.sevenbridges.com/
 
 requirements:
 - class: ShellCommandRequirement
@@ -47,7 +45,6 @@ inputs:
     prefix: -m
     position: 1
     shellQuote: false
-  sbg:toolDefaultValue: '100'
 - id: fastq_reads1
   label: FASTQ Reads 1
   doc: Paired-end reads 1 in FASTQ format.
@@ -55,7 +52,6 @@ inputs:
   inputBinding:
     position: 2
     shellQuote: false
-  sbg:fileTypes: FASTQ
 - id: fastq_reads2
   label: FASTQ Reads 2
   doc: Paired-end reads 2 in FASTQ format.
@@ -63,7 +59,6 @@ inputs:
   inputBinding:
     position: 2
     shellQuote: false
-  sbg:fileTypes: FASTQ
 - id: sample_id
   label: Sample ID
   doc: |-
@@ -160,14 +155,4 @@ arguments:
     }
   shellQuote: false
 id: hla_hd
-sbg:categories:
-- WGS
-- RNA
-- HLA Typing
-- HLA
-- MHC
-- WES (WXS)
-sbg:toolAuthor: Shuji Kawaguchi <shuji@genome.med.kyoto-u.ac.jp>
-sbg:toolkit: HLA-HD
-sbg:toolkitVersion: 1.4.0
-sbg:wrapperAuthor: Rachel Bowen-James <rbowen-james@ccia.org.au>, Weilin Wu <wwu@ccia.org.au>
+

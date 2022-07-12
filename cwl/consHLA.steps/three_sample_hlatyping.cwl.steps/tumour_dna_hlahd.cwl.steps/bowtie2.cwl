@@ -17,8 +17,6 @@ doc: |-
 
   ## Documentation
   - [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/manual.shtml)
-$namespaces:
-  sbg: https://www.sevenbridges.com/
 
 requirements:
 - class: ShellCommandRequirement
@@ -77,7 +75,6 @@ inputs:
   label: Bowtie2 Index Archive
   doc: A TAR archive containing Bowtie2 index files.
   type: File
-  sbg:fileTypes: TAR
 - id: read1_sequences
   label: Read 1 Sequences
   doc: Read 1 sequences in FASTA or FASTQ format (may be bgzipped).
@@ -86,7 +83,6 @@ inputs:
     prefix: '-1'
     position: 2
     shellQuote: false
-  sbg:fileTypes: FASTQ, FASTQ.GZ, FASTA, FASTA.GZ, FA, FA.GZ, FQ, FQ.GZ
 - id: read2_sequences
   label: Read 2 Sequences
   doc: Read 2 sequences in FASTA or FASTQ format (may be bgzipped).
@@ -95,7 +91,6 @@ inputs:
     prefix: '-2'
     position: 3
     shellQuote: false
-  sbg:fileTypes: FASTQ, FASTQ.GZ, FASTA, FASTA.GZ, FA, FA.GZ, FQ, FQ.GZ
 - id: no_unaligned
   label: Suppress Unaligned Reads
   doc: Suppres SAM records for unaligned reads.
@@ -155,6 +150,3 @@ arguments:
   valueFrom: '8'
   shellQuote: false
 id: bowtie2
-sbg:toolAuthor: Langmead B, Salzberg S
-sbg:toolkit: bowtie2
-sbg:toolkitVersion: 2.4.1

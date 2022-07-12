@@ -14,8 +14,6 @@ doc: |-
 
   ## Documentation
   - [samtools](http://www.htslib.org/doc/samtools.html)
-$namespaces:
-  sbg: https://www.sevenbridges.com/
 
 requirements:
 - class: ShellCommandRequirement
@@ -31,7 +29,6 @@ inputs:
   inputBinding:
     position: 10
     shellQuote: false
-  sbg:fileTypes: BAM, SAM, CRAM
 
 outputs:
 - id: output_fastq_1
@@ -54,7 +51,6 @@ outputs:
         
         return out
       }
-  sbg:fileTypes: FASTQ
 - id: output_fastq_2
   label: Paired-End FASTQ 2
   doc: Paired-end FASTQ 2 output by samtools fastq.
@@ -75,7 +71,6 @@ outputs:
         
         return out
       }
-  sbg:fileTypes: FASTQ
 
 baseCommand:
 - samtools
@@ -102,6 +97,3 @@ arguments:
     }
   shellQuote: false
 id: samtools_fastq
-sbg:toolkit: samtools
-sbg:toolkitVersion: '1.10'
-sbg:wrapperAuthor: Rachel Bowen-James <rbowen-james@ccia.org.au>, Weilin Wu <wwu@ccia.org.au>

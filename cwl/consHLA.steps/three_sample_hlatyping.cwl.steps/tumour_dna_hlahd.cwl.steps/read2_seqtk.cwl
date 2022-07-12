@@ -1,8 +1,6 @@
 cwlVersion: v1.2
 class: CommandLineTool
 label: seqtk
-$namespaces:
-  sbg: https://sevenbridges.com
 
 requirements:
 - class: ShellCommandRequirement
@@ -77,7 +75,6 @@ inputs:
   inputBinding:
     position: 1
     shellQuote: false
-  sbg:fileTypes: fastq.gz, FASTQ.GZ
 - id: num_reads
   type: int
   inputBinding:
@@ -91,7 +88,6 @@ outputs:
   outputBinding:
     glob: '*subsample.fastq.gz'
     outputEval: $(inheritMetadata(self, inputs.input_fastq))
-  sbg:fileTypes: fastq.gz, FASTQ.GZ
 stdout: |-
   ${
       var elements = inputs.input_fastq.basename.split('.');
@@ -112,5 +108,4 @@ arguments:
   position: 0
   valueFrom: '-2'
   shellQuote: false
-sbg:wrapperAuthor: Rachel Bowen-James <rbowen-james@ccia.org.au>, Weilin Wu <wwu@ccia.org.au>
 

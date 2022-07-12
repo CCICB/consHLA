@@ -32,8 +32,6 @@ doc: |-
 
   ## Documentation
   - [HLA-HD](https://www.genome.med.kyoto-u.ac.jp/HLA-HD/)
-$namespaces:
-  sbg: https://www.sevenbridges.com/
 
 requirements:
 - class: ShellCommandRequirement
@@ -49,7 +47,6 @@ inputs:
     prefix: -s1
     position: 0
     shellQuote: false
-  sbg:fileTypes: TXT
 - id: tumour_rna
   label: Sample 3 HLA-HD Results
   doc: The final results text file produced by running HLA-HD on the tumour RNA sample.
@@ -58,7 +55,6 @@ inputs:
     prefix: -s3
     position: 0
     shellQuote: false
-  sbg:fileTypes: TXT
 - id: normal_dna
   label: Sample 2 HLA-HD Results
   doc: The final results text file produced by running HLA-HD on the normal DNA sample.
@@ -67,7 +63,6 @@ inputs:
     prefix: -s2
     position: 0
     shellQuote: false
-  sbg:fileTypes: TXT
 - id: sample_name
   label: Sample Name
   doc: The sample name used to name the output files.
@@ -84,7 +79,6 @@ outputs:
   type: File
   outputBinding:
     glob: '*Sample_hla.consensus.clinSig.json'
-  sbg:fileTypes: JSON
 - id: filtered_txt
   label: HLA Consensus Text File
   doc: |-
@@ -92,35 +86,30 @@ outputs:
   type: File
   outputBinding:
     glob: '*Sample_hla.consensus.trunc.txt'
-  sbg:fileTypes: TXT
 - id: sample1_json
   label: Sample 1 HLA-HD Results JSON
   doc: HLA-HD final results obtained from sample 1 and represented in JSON format.
   type: File
   outputBinding:
     glob: '*sample1_hla.json'
-  sbg:fileTypes: JSON
 - id: consensus_json
   label: HLA Consensus JSON
   doc: A JSON file containing cosnensus alleles for all typed HLA genes.
   type: File
   outputBinding:
     glob: '*Sample_hla.consensus.json'
-  sbg:fileTypes: JSON
 - id: sample2_json
   label: Sample 2 HLA-HD Results JSON
   doc: HLA-HD final results obtained from sample 2 and represented in JSON format.
   type: File
   outputBinding:
     glob: '*sample2_hla.json'
-  sbg:fileTypes: JSON
 - id: sample3_json
   label: Sample 3 HLA-HD Results JSON
   doc: HLA-HD final results obtained from sample 3 and represented in JSON format.
   type: File?
   outputBinding:
     glob: '*sample3_hla.json'
-  sbg:fileTypes: JSON
 - id: clin_sig_txt
   label: Clinically Significant HLA Genes Consensus Text File
   doc: |-
@@ -128,7 +117,6 @@ outputs:
   type: File
   outputBinding:
     glob: '*Sample_hla.consensus.clinSig.trunc.txt'
-  sbg:fileTypes: TXT
 
 baseCommand:
 - python3
@@ -140,4 +128,3 @@ arguments:
   separate: false
   shellQuote: false
 id: hlahd_consensus_parser
-sbg:wrapperAuthor: Rachel Bowen-James <rbowen-james@ccia.org.au>, Weilin Wu <wwu@ccia.org.au>

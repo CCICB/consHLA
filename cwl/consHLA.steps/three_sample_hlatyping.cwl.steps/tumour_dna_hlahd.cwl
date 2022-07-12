@@ -21,8 +21,6 @@ doc: |-
   - [HLA-HD docs](https://www.genome.med.kyoto-u.ac.jp/HLA-HD/)
   - [HLA-HD publication](https://pubmed.ncbi.nlm.nih.gov/28419628/)
   - [Bowtie2](https://github.com/BenLangmead/bowtie2)
-$namespaces:
-  sbg: https://sevenbridges.com
 
 requirements:
 - class: LoadListingRequirement
@@ -35,53 +33,34 @@ inputs:
   label: Patient ID
   doc: Patient ID to be used for naming the output SAM.
   type: string
-  sbg:x: 0
-  sbg:y: 0
 - id: read1_sequences
   label: Read 1 Sequences
   doc: Read 1 sequences in FASTA or FASTQ format (may be bgzipped).
   type: File
-  sbg:fileTypes: FASTQ, FASTQ.GZ, FASTA, FASTA.GZ, FA, FA.GZ, FQ, FQ.GZ
-  sbg:x: -275.3482971191406
-  sbg:y: 339.40435791015625
 - id: bowtie2_index_prefix
   label: Bowtie2 Index Prefix
   doc: |-
     The prefix of index files contained in the Bowtie2 index TAR. Note that all Bowtie2 nidex files in the TAR should have this prefix.
   type: string
-  sbg:x: 0
-  sbg:y: 426.203125
 - id: bowtie2_index
   label: Bowtie2 Index Archive
   doc: |-
     A TAR archive containing Bowtie2 index files. For the purposes of speeding up HLA-HD, this should be an archive of Bowtie2 index files for an HLA region reference, such as `hla_gen` provided by the IMGT.
   type: File
-  sbg:fileTypes: TAR
-  sbg:x: 0
-  sbg:y: 532.5625
 - id: output_prefix
   label: HLA-HD Output Prefix
   doc: Optional prefix for HLA-HD output files and directory.
   type: string?
-  sbg:x: 0
-  sbg:y: 319.734375
 - id: read2_sequences
   label: Read 2 Sequences
   doc: Read 2 sequences in FASTA or FASTQ format (may be bgzipped).
   type: File
-  sbg:fileTypes: FASTQ, FASTQ.GZ, FASTA, FASTA.GZ, FA, FA.GZ, FQ, FQ.GZ
-  sbg:x: -256.0113830566406
-  sbg:y: 27.584135055541992
 - id: to_subsample
   label: to subsample?
   type: boolean
-  sbg:x: -267
-  sbg:y: 207
 - id: number_of_subsample_reads
   doc: The number of reads to subsample for read2
   type: int?
-  sbg:x: -394.8772888183594
-  sbg:y: 130.20858764648438
 
 outputs:
 - id: hlahd_output
@@ -90,17 +69,12 @@ outputs:
   type: Directory
   outputSource:
   - hla_hd_1/hlahd_results
-  sbg:x: 1407.3223876953125
-  sbg:y: 213.046875
 - id: hlahd_final
   label: HLA-HD Final Results File
   doc: The final results text file produced by HLA-HD.
   type: File
   outputSource:
   - hla_hd_1/hlahd_final_results
-  sbg:fileTypes: TXT
-  sbg:x: 1407.3223876953125
-  sbg:y: 319.515625
 
 steps:
 - id: bowtie2
@@ -128,8 +102,6 @@ steps:
   run: tumour_dna_hlahd.cwl.steps/bowtie2.cwl
   out:
   - id: aligned_sam
-  sbg:x: 216.125
-  sbg:y: 238.3359375
 - id: samtools_view
   label: samtools-view
   in:
@@ -144,8 +116,6 @@ steps:
   run: tumour_dna_hlahd.cwl.steps/samtools_view.cwl
   out:
   - id: output_alignment
-  sbg:x: 533.77783203125
-  sbg:y: 266.3359375
 - id: samtools_fastq_1
   label: samtools-fastq
   in:
@@ -155,8 +125,6 @@ steps:
   out:
   - id: output_fastq_1
   - id: output_fastq_2
-  sbg:x: 799.46533203125
-  sbg:y: 259.2265625
 - id: hla_hd_1
   label: hla-hd
   in:
@@ -176,8 +144,6 @@ steps:
   out:
   - id: hlahd_results
   - id: hlahd_final_results
-  sbg:x: 1095.0543212890625
-  sbg:y: 138.9765625
 - id: read2_seqtk
   label: read2_seqtk
   in:
@@ -193,8 +159,6 @@ steps:
   when: $(inputs.custom_input)
   out:
   - id: subsampled_fastq
-  sbg:x: -105
-  sbg:y: 117
 - id: read1_seqtk
   label: read1_seqtk
   in:
@@ -210,18 +174,4 @@ steps:
   when: $(inputs.custom_input)
   out:
   - id: subsampled_fastq
-  sbg:x: -102.25846099853516
-  sbg:y: 249.2247314453125
-sbg:appVersion:
-- v1.2
-- v1.0
-sbg:contributors:
-- alanwu
-- mwonge
-sbg:createdBy: mwonge
-sbg:createdOn: 1642571972
-sbg:sbgMaintained: false
-sbg:toolAuthor: Rachel Bowen-James <rbowen-james@ccia.org.au>, Weilin Wu <wwu@ccia.org.au>
-sbg:validationErrors: []
-sbg:workflowLanguage: CWL
-sbg:wrapperAuthor: Rachel Bowen-James <rbowen-james@ccia.org.au>, Weilin Wu <wwu@ccia.org.au>
+
