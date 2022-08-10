@@ -16,9 +16,10 @@ You can run the workflow on any cloud platform supporting CWL execution (i.e. [C
 <br>
 
 ### Local 
+You will need to have a docker daemon available. <br>
 Running a `.cwl` workflow requires specific software. Here we pick `cwltool`. Install it following these [instructions](https://github.com/common-workflow-language/cwltool). `cwltool` usage is shown below <br>
 ```
-cwltool cwl/consHLA.cwl sample_input.yml
+cwltool --basedir . ./cwl/consHLA.cwl ./sample_input.yml
 ```
 You can run the whole or part of the consHLA workflow by specifing the `.cwl` file and supplying the correct `input.yml`
 
