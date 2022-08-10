@@ -138,7 +138,7 @@ arguments:
   valueFrom: |-
     ${
         var ref = inputs.bowtie2_index.path.split('/').splice(-1)
-        return "tar -xvf " + ref + " && rm " + ref + " &&"
+        return "tar -xvf " + ref +  " &&"
     }
   shellQuote: false
 - prefix: ''

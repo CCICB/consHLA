@@ -119,7 +119,7 @@ arguments:
 - prefix: ''
   position: 5
   valueFrom: ./
-  shellQuote: true
+  shellQuote: false
 - prefix: ''
   position: 6
   valueFrom: |-

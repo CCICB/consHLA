@@ -12,10 +12,10 @@ Germline_DNA_read2_sequences:
 Germline_DNA_read1_sequences:  
   class: File
   path: /path/to/Germline_WGS_read1.fastq.gz
-RNA_DNA_read2_sequences:  
+RNA_read2_sequences:  
   class: File
   path: /path/to/RNA_WGS_read2.fastq.gz # Optional
-RNA_DNA_read1_sequences:  
+RNA_read1_sequences:  
   class: File
   path: /path/to/RNA_WGS_read1.fastq.gz # Optional
 bowtie2_index:  
