@@ -1,12 +1,26 @@
 # support the following sequencing file formats: FASTQ, FASTQ.GZ, FASTA, FASTA.GZ, FA, FA.GZ, FQ, FQ.GZ
 
-tumour_DNA_read2_sequences: /path/to/tumour_WGS_read2.fastq.gz 
-tumour_DNA_read1_sequences: /path/to/tumour_WGS_read1.fastq.gz
-Germline_DNA_read2_sequences: /path/to/Germline_WGS_read2.fastq.gz
-Germline_DNA_read1_sequences: /path/to/Germline_WGS_read1.fastq.gz
-RNA_DNA_read2_sequences: /path/to/RNA_WGS_read2.fastq.gz # Optional
-RNA_DNA_read1_sequences: /path/to/RNA_WGS_read1.fastq.gz # Optional
-bowtie2_index: /path/to/hla_gen.tar # Bowtie2 index generated from this reference: https://github.com/ANHIG/IMGTHLA/blob/Latest/hla_gen.fasta
+tumour_DNA_read2_sequences: 
+  class: File
+  path: /path/to/tumour_WGS_read2.fastq.gz 
+tumour_DNA_read1_sequences:  
+  class: File
+  path: /path/to/tumour_WGS_read1.fastq.gz
+Germline_DNA_read2_sequences:  
+  class: File
+  path: /path/to/Germline_WGS_read2.fastq.gz
+Germline_DNA_read1_sequences:  
+  class: File
+  path: /path/to/Germline_WGS_read1.fastq.gz
+RNA_DNA_read2_sequences:  
+  class: File
+  path: /path/to/RNA_WGS_read2.fastq.gz # Optional
+RNA_DNA_read1_sequences:  
+  class: File
+  path: /path/to/RNA_WGS_read1.fastq.gz # Optional
+bowtie2_index:  
+  class: File
+  path: /path/to/hla_gen.tar # Bowtie2 index generated from this reference: https://github.com/ANHIG/IMGTHLA/blob/Latest/hla_gen.fasta
 bowtie2_index_prefix: hla_gen # Whatever goes before .tar in bowtie2 index filename
 to_subsample: false
 number_of_subsample_reads: 100000000 # Optional, only required when to_subsample is True

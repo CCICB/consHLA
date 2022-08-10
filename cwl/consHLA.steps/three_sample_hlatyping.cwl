@@ -72,12 +72,12 @@ outputs:
   label: HLA Consensus Text File
   type: File
   outputSource:
-  - hlahd_consensus_parser/filtered_txt
+  - hlahd_consensus_parser/consensus_txt
 - id: sample1_json
   label: Tumour DNA HLA-HD Results JSON
   type: File
   outputSource:
-  - hlahd_consensus_parser/sample1_json
+  - hlahd_consensus_parser/tumour_json
 - id: consensus_json
   label: HLA Consensus JSON
   type: File
@@ -87,12 +87,12 @@ outputs:
   label: Normal DNA HLA-HD Results JSON
   type: File
   outputSource:
-  - hlahd_consensus_parser/sample2_json
+  - hlahd_consensus_parser/germline_json
 - id: sample3_json
   label: Tumour RNA HLA-HD Results JSON
   type: File?
   outputSource:
-  - hlahd_consensus_parser/sample3_json
+  - hlahd_consensus_parser/rnaseq_json
 - id: clin_sig_txt
   label: Clinically Significant HLA Consensus Text File
   type: File
@@ -166,11 +166,11 @@ steps:
   run: three_sample_hlatyping.cwl.steps/hlahd_consensus_parser.cwl
   out:
   - id: clin_sig_json
-  - id: filtered_txt
-  - id: sample1_json
+  - id: consensus_txt
+  - id: tumour_json
   - id: consensus_json
-  - id: sample2_json
-  - id: sample3_json
+  - id: germline_json
+  - id: rnaseq_json
   - id: clin_sig_txt
 - id: tumour_dna_hlahd
   label: tumout-DNA-hlahd
