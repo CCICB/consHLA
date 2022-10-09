@@ -23,7 +23,7 @@ doc: |-
   - **HLA Consensus JSON:** a JSON file containing consensus alleles for **all typed HLA genes at the highest possible accuracy level** (two- or three-field).
   - **HLA Consensus Text File:** a text file containing all **unique consensus alleles** from all HLA genes which were successfully typed by HLA-HD for which a consensus could be determined (i.e. 'Not typed' and 'No consensus' alleles are removed). The alleles are truncated to two-field accuracy. This file can be used as input to pVACtools.
   - **Clinically Significant HLA Consensus JSON:** a JSON file containing consensus alleles for **a subset of clinically significant HLA genes (HLA-A, -B, -C, -DRA, -DRB1, -DRB3, -DRB4, -DRB5, -DQA1, -DQB1, -DPA1, -DPB1) at the highest possible accuracy level** (two- or three-field).
-  - **HLA Consensus Text File:** a text file containing all **unique consensus alleles** from the clinically significant subset of HLA genes(defined above) which were successfully typed by HLA-HD for which a consensus could be determined (i.e. 'Not typed' and 'No consensus' alleles are removed). The alleles are truncated to two-field accuracy. This file can be used as input to pVACtools.
+  - **Clinically Significant HLA Consensus Text File:** a text file containing all **unique consensus alleles** from the clinically significant subset of HLA genes(defined above) which were successfully typed by HLA-HD for which a consensus could be determined (i.e. 'Not typed' and 'No consensus' alleles are removed). The alleles are truncated to two-field accuracy. This file can be used as input to pVACtools.
 
   In addition, a JSON file is generated containing the two/three sets of input HLA-HD results in a format consistent with that of the consensus allele JSONs.
 
@@ -45,7 +45,7 @@ inputs:
   type: File
   inputBinding:
     prefix: -tumour
-    position: 0
+    position: 1
     shellQuote: false
 - id: tumour_rna
   label: Sample 3 HLA-HD Results
@@ -53,7 +53,7 @@ inputs:
   type: File?
   inputBinding:
     prefix: -rnaseq
-    position: 0
+    position: 3
     shellQuote: false
 - id: normal_dna
   label: Sample 2 HLA-HD Results
@@ -61,7 +61,7 @@ inputs:
   type: File
   inputBinding:
     prefix: -germline
-    position: 0
+    position: 2
     shellQuote: false
 - id: sample_name
   label: Sample Name
@@ -79,14 +79,14 @@ outputs:
   type: File
   outputBinding:
     glob: '*Sample_hla.consensus.clinSig.json'
-- id: consensus_txt
+- id: filtered_txt
   label: HLA Consensus Text File
   doc: |-
     A text file containing a comma-separated list of consensus alleles for all typed HLA genes. Only includes alleles for which a consensus could be determined. All alleles are truncated to two-field accuracy. This file should be used as input for pVACseq.
   type: File
   outputBinding:
     glob: '*Sample_hla.consensus.trunc.txt'
-- id: tumour_json
+- id: tumour_dna_json
   label: Sample 1 HLA-HD Results JSON
   doc: HLA-HD final results obtained from sample 1 and represented in JSON format.
   type: File
@@ -98,13 +98,13 @@ outputs:
   type: File
   outputBinding:
     glob: '*Sample_hla.consensus.json'
-- id: germline_json
+- id: normal_dna_json
   label: Sample 2 HLA-HD Results JSON
   doc: HLA-HD final results obtained from sample 2 and represented in JSON format.
   type: File
   outputBinding:
     glob: '*germline_hla.json'
-- id: rnaseq_json
+- id: rna_json
   label: Sample 3 HLA-HD Results JSON
   doc: HLA-HD final results obtained from sample 3 and represented in JSON format.
   type: File?
@@ -123,8 +123,7 @@ baseCommand:
 - /app/hlahd_consensus_parser_v2.py
 arguments:
 - prefix: ''
-  position: 2
+  position: 4
   valueFrom: '> hla'
   separate: false
   shellQuote: false
-id: hlahd_consensus_parser

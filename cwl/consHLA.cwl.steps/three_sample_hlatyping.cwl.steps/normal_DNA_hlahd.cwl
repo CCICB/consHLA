@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: Workflow
-label: restricted-reads-hlahd
+label: restricted-reads-hlahd-simplified
 doc: |-
   # About this workflow
   This workflow runs fast HLA typing by restricting reads to those aligning with the HLA region prior to running HLA-HD.  
@@ -8,7 +8,7 @@ doc: |-
 
   ## Before running this workflow
   Prior to running this workflow, you must create/download a Bowtie2 Index (generated using `bowtie2 build`) for a reference file **which only includes the HLA region on chromosome 6**. We recommend using the HLA region reference `hla_gen.fasta` provided by IMGT. It can be downloaded from the IMGT GitHub repo [here](https://github.com/ANHIG/IMGTHLA/tree/Latest/fasta) or using this download link [ftp://ftp.ebi.ac.uk/pub/databases/ipd/imgt/hla/hla_gen.fasta](ftp://ftp.ebi.ac.uk/pub/databases/ipd/imgt/hla/hla_gen.fasta). The Bowtie2 Index files must then be archived using the `tar` command before being used as the Bowtie2 Index Archive input to this workflow.  
-  **A Bowtie2 index archive for `hla_gen.fasta` can be downloaded from the repo to be used as an input for this workflow. The corresponding Bowtie2 Index Prefix parameter should be `hla_gen`.**
+  **A Bowtie2 index archive for `hla_gen.fasta` can be downloaded from the disTIL repo to be used as an input for this workflow. The corresponding Bowtie2 Index Prefix parameter should be `hla_gen`.**
 
   ## Steps
   This workflow follows the steps recommended by the HLA-HD authors [here](https://www.genome.med.kyoto-u.ac.jp/HLA-HD/) under the subheadings Tips > Filtering of reads (March 6, 2019).
@@ -23,6 +23,7 @@ doc: |-
   - [Bowtie2](https://github.com/BenLangmead/bowtie2)
 
 requirements:
+- class: LoadListingRequirement
 - class: InlineJavascriptRequirement
 - class: StepInputExpressionRequirement
 
@@ -30,6 +31,15 @@ inputs:
 - id: sample_name
   label: Patient ID
   doc: Patient ID to be used for naming the output SAM.
+  type: string
+- id: output_prefix
+  label: HLA-HD Output Prefix
+  doc: Optional prefix for HLA-HD output files and directory.
+  type: string?
+- id: bowtie2_index_prefix_1
+  label: Bowtie2 Index Prefix
+  doc: |-
+    The prefix of index files contained in the Bowtie2 index TAR. Note that all Bowtie2 nidex files in the TAR should have this prefix.
   type: string
 - id: read2_sequences
   label: Read 2 Sequences
@@ -39,34 +49,14 @@ inputs:
   label: Read 1 Sequences
   doc: Read 1 sequences in FASTA or FASTQ format (may be bgzipped).
   type: File
-- id: bowtie2_index_prefix
-  label: Bowtie2 Index Prefix
-  doc: |-
-    The prefix of index files contained in the Bowtie2 index TAR. Note that all Bowtie2 nidex files in the TAR should have this prefix.
-  type: string
 - id: bowtie2_index
   label: Bowtie2 Index Archive
-  doc: |-
-    A TAR archive containing Bowtie2 index files. For the purposes of speeding up HLA-HD, this should be an archive of Bowtie2 index files for an HLA region reference, such as `hla_gen` provided by the IMGT.
+  doc: A TAR archive containing Bowtie2 index files.
   type: File
-- id: output_prefix
-  label: HLA-HD Output Prefix
-  doc: Optional prefix for HLA-HD output files and directory.
-  type: string?
+- id: threads
+  type: int?
 
 outputs:
-- id: hla_fastq_reads1
-  label: HLA Reads 1
-  doc: A FASTQ file containing end 1 reads which were found to align to the HLA region.
-  type: File
-  outputSource:
-  - samtools_fastq_1/output_fastq_2
-- id: hla_fastq_reads2
-  label: HLA Reads 2
-  doc: A FASTQ file containing end 2 reads which were found to align to the HLA region.
-  type: File
-  outputSource:
-  - samtools_fastq_1/output_fastq_1
 - id: hlahd_output
   label: HLA-HD Output
   doc: Directory containing all HLA-HD output files.
@@ -81,9 +71,50 @@ outputs:
   - hla_hd_1/hlahd_final_results
 
 steps:
-- id: bowtie2
+- id: samtools_view
+  label: samtools-view
+  in:
+  - id: output_format
+    default: BAM
+  - id: input_alignment
+    source: bowtie3/aligned_sam
+  - id: fast_bam_compression
+    default: true
+  - id: exclude_reads_any
+    default: '4'
+  run: normal_DNA_hlahd.cwl.steps/samtools_view.cwl
+  out:
+  - id: output_alignment
+- id: samtools_fastq_1
+  label: samtools-fastq
+  in:
+  - id: input_alignment
+    source: samtools_view/output_alignment
+  run: normal_DNA_hlahd.cwl.steps/samtools_fastq_1.cwl
+  out:
+  - id: output_fastq_1
+  - id: output_fastq_2
+- id: hla_hd_1
+  label: hla-hd
+  in:
+  - id: threads
+    source: threads
+  - id: minimum_read_length
+    default: 0
+  - id: fastq_reads1
+    source: samtools_fastq_1/output_fastq_1
+  - id: fastq_reads2
+    source: samtools_fastq_1/output_fastq_2
+  - id: sample_id
+    source: sample_name
+  - id: output_prefix
+    source: output_prefix
+  run: normal_DNA_hlahd.cwl.steps/hla_hd_1.cwl
+  out:
+  - id: hlahd_results
+  - id: hlahd_final_results
+- id: bowtie3
   label: bowtie2
-  doc: Run Bowtie2 alignment of input FASTQs to an HLA region reference.
   in:
   - id: bowtie2_index
     source: bowtie2_index
@@ -96,50 +127,9 @@ steps:
   - id: sample_name
     source: sample_name
   - id: bowtie2_index_prefix
-    source: bowtie2_index_prefix
-  run: normal_dna_hlahd.cwl.steps/bowtie2.cwl
+    source: bowtie2_index_prefix_1
+  - id: threads
+    source: threads
+  run: normal_DNA_hlahd.cwl.steps/bowtie3.cwl
   out:
   - id: aligned_sam
-- id: samtools_view
-  label: samtools-view
-  in:
-  - id: output_format
-    default: BAM
-  - id: input_alignment
-    source: bowtie2/aligned_sam
-  - id: fast_bam_compression
-    default: true
-  - id: exclude_reads_any
-    default: '4'
-  run: normal_dna_hlahd.cwl.steps/samtools_view.cwl
-  out:
-  - id: output_alignment
-- id: samtools_fastq_1
-  label: samtools-fastq
-  in:
-  - id: input_alignment
-    source: samtools_view/output_alignment
-  run: normal_dna_hlahd.cwl.steps/samtools_fastq_1.cwl
-  out:
-  - id: output_fastq_1
-  - id: output_fastq_2
-- id: hla_hd_1
-  label: hla-hd
-  in:
-  - id: threads
-    default: 2
-  - id: minimum_read_length
-    default: 0
-  - id: fastq_reads1
-    source: samtools_fastq_1/output_fastq_1
-  - id: fastq_reads2
-    source: samtools_fastq_1/output_fastq_2
-  - id: sample_id
-    source: sample_name
-  - id: output_prefix
-    source: output_prefix
-  run: normal_dna_hlahd.cwl.steps/hla_hd_1.cwl
-  out:
-  - id: hlahd_results
-  - id: hlahd_final_results
-

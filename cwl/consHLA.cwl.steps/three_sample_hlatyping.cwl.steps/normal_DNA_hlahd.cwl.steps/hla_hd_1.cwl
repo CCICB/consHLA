@@ -119,7 +119,7 @@ arguments:
 - prefix: ''
   position: 5
   valueFrom: ./
-  shellQuote: false
+  shellQuote: true
 - prefix: ''
   position: 6
   valueFrom: |-
@@ -155,4 +155,3 @@ arguments:
     }
   shellQuote: false
 id: hla_hd
-

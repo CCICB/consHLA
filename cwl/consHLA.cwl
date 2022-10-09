@@ -1,4 +1,4 @@
-cwlVersion: v1.2
+cwlVersion: v1.0
 class: Workflow
 label: consensus_hla
 doc: |-
@@ -57,20 +57,15 @@ inputs:
   label: RNA Read 2 Sequences
   doc: Read 2 sequences in FASTA or FASTQ format (may be bgzipped).
   type: File?
-- id: bowtie2_index_prefix
-  label: HLA Bowtie2 Index Prefix
-  type: string
-- id: to_subsample
-  label: subsample tumour DNA
-  doc: |-
-    Tumour DNA fastq may be large due to high sequencing depth. Subsample it to reduce runtime.
-  type: boolean
-- id: number_of_subsample_reads
-  doc: The number of reads to subsample for read2
-  type: int?
 - id: patient_id
   label: Patient ID
   type: string
+- id: bowtie2_index_prefix
+  label: HLA Bowtie2 Index Prefix
+  type: string
+- id: alignment_threads
+  label: alignment-threads
+  type: int?
 
 outputs:
 - id: hla_report
@@ -116,6 +111,18 @@ outputs:
   - three_sample_hlatyping/clin_sig_json
 
 steps:
+- id: hla_reports
+  label: hla-report
+  in:
+  - id: full_hla
+    source: three_sample_hlatyping/consensus_json
+  - id: clin_sig_hla
+    source: three_sample_hlatyping/clin_sig_json
+  - id: patient_id
+    source: patient_id
+  run: consHLA.cwl.steps/hla_reports.cwl
+  out:
+  - id: hla_report
 - id: three_sample_hlatyping
   label: three-sample-hlatyping
   in:
@@ -137,11 +144,9 @@ steps:
     source: bowtie2_index_prefix
   - id: RNA_read2_sequences
     source: RNA_read2_sequences
-  - id: to_subsample
-    source: to_subsample
-  - id: number_of_subsample_reads
-    source: number_of_subsample_reads
-  run: consHLA.steps/three_sample_hlatyping.cwl
+  - id: alignment_threads
+    source: alignment_threads
+  run: consHLA.cwl.steps/three_sample_hlatyping.cwl
   out:
   - id: clin_sig_json
   - id: consensus_txt
@@ -150,15 +155,3 @@ steps:
   - id: sample2_json
   - id: sample3_json
   - id: clin_sig_txt
-- id: hla_reports
-  label: hla-report
-  in:
-  - id: full_hla
-    source: three_sample_hlatyping/consensus_json
-  - id: clin_sig_hla
-    source: three_sample_hlatyping/clin_sig_json
-  - id: patient_id
-    source: patient_id
-  run: consHLA.steps/hla_reports.cwl
-  out:
-  - id: hla_report

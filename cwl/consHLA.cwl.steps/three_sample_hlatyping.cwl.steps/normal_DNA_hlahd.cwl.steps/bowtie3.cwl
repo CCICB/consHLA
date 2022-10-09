@@ -119,6 +119,13 @@ inputs:
     prefix: -x
     position: 1
     shellQuote: false
+- id: threads
+  type: int?
+  default: 8
+  inputBinding:
+    prefix: -p
+    position: 0
+    shellQuote: false
 
 outputs:
 - id: aligned_sam
@@ -138,15 +145,11 @@ arguments:
   valueFrom: |-
     ${
         var ref = inputs.bowtie2_index.path.split('/').splice(-1)
-        return "tar -xvf " + ref +  " &&"
+        return "tar -xvf " + ref + " && rm " + ref + " &&"
     }
   shellQuote: false
 - prefix: ''
   position: 0
   valueFrom: bowtie2
-  shellQuote: false
-- prefix: -p
-  position: 2
-  valueFrom: '8'
   shellQuote: false
 id: bowtie2

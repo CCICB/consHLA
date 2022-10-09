@@ -1,6 +1,6 @@
-cwlVersion: v1.2
+cwlVersion: v1.0
 class: Workflow
-label: three-sample-hlatyping
+label: three-sample-hlatyping-simplified
 doc: |-
   # About this workflow
   This workflow runs HLA-HD (with restricted reads for speed) on three sets of paired-end FASTQs (tumour DNA, tumour RNA, and normal DNA) and generates a consensus type for each HLA allele.  See the `hlahd-consensus-parser` tool documentation for more information on how a consensus HLA type is determined.
@@ -53,13 +53,8 @@ inputs:
   label: RNA Read 2 Sequences
   doc: Read 2 sequences in FASTA or FASTQ format (may be bgzipped).
   type: File?
-- id: to_subsample
-  label: subsample tumour DNA
-  doc: |-
-    Tumour DNA fastq may be large due to high sequencing depth. Subsample it to reduce runtime.
-  type: boolean
-- id: number_of_subsample_reads
-  doc: The number of reads to subsample for read2
+- id: alignment_threads
+  label: alignment-threads
   type: int?
 
 outputs:
@@ -67,133 +62,119 @@ outputs:
   label: Clinically Significant HLA Consensus JSON
   type: File
   outputSource:
-  - hlahd_consensus_parser/clin_sig_json
+  - hla_consensus_parser/clin_sig_json
 - id: consensus_txt
   label: HLA Consensus Text File
   type: File
   outputSource:
-  - hlahd_consensus_parser/consensus_txt
+  - hla_consensus_parser/filtered_txt
 - id: sample1_json
   label: Tumour DNA HLA-HD Results JSON
   type: File
   outputSource:
-  - hlahd_consensus_parser/tumour_json
+  - hla_consensus_parser/tumour_dna_json
 - id: consensus_json
   label: HLA Consensus JSON
   type: File
   outputSource:
-  - hlahd_consensus_parser/consensus_json
+  - hla_consensus_parser/consensus_json
 - id: sample2_json
   label: Normal DNA HLA-HD Results JSON
   type: File
   outputSource:
-  - hlahd_consensus_parser/germline_json
+  - hla_consensus_parser/normal_dna_json
 - id: sample3_json
   label: Tumour RNA HLA-HD Results JSON
   type: File?
   outputSource:
-  - hlahd_consensus_parser/rnaseq_json
+  - hla_consensus_parser/rna_json
 - id: clin_sig_txt
   label: Clinically Significant HLA Consensus Text File
   type: File
   outputSource:
-  - hlahd_consensus_parser/clin_sig_txt
+  - hla_consensus_parser/clin_sig_txt
 
 steps:
-- id: tumour_rna_hlahd
-  label: RNA-hlahd
-  doc: Run restricted reads HLA-HD typing from tumour RNA.
+- id: hla_consensus_parser
+  label: hlahd-consensus-parser
+  in:
+  - id: tumour_dna
+    source: tumour_DNA_hlahd/hlahd_final
+  - id: tumour_rna
+    source: tumour_RNA_hlahd/hlahd_final
+  - id: normal_dna
+    source: normal_DNA_hlahd/hlahd_final
+  - id: sample_name
+    source: patient_id
+  run: three_sample_hlatyping.cwl.steps/hla_consensus_parser.cwl
+  out:
+  - id: clin_sig_json
+  - id: filtered_txt
+  - id: tumour_dna_json
+  - id: consensus_json
+  - id: normal_dna_json
+  - id: rna_json
+  - id: clin_sig_txt
+- id: tumour_RNA_hlahd
+  label: tumour-RNA-hlahd
   in:
   - id: sample_name
     source: patient_id
+  - id: output_prefix
+    default: tumour_rna
+  - id: bowtie2_index_prefix_1
+    source: bowtie2_index_prefix
   - id: read2_sequences
     source: RNA_read2_sequences
   - id: read1_sequences
     source: RNA_read1_sequences
-  - id: bowtie2_index_prefix
-    source: bowtie2_index_prefix
   - id: bowtie2_index
     source: bowtie2_index
-  - id: output_prefix
-    default: tumour_rna
-  run: three_sample_hlatyping.cwl.steps/tumour_rna_hlahd.cwl
-  when: |-
-    ${
-        if (inputs.read1_sequences === null || inputs.read2_sequences === null) {
-            return false
-        } else {
-            return true
-        }
-    }
+  - id: threads
+    source: alignment_threads
+  run: three_sample_hlatyping.cwl.steps/tumour_RNA_hlahd.cwl
   out:
-  - id: hla_fastq_reads1
-  - id: hla_fastq_reads2
   - id: hlahd_output
   - id: hlahd_final
-- id: normal_dna_hlahd
-  label: normal-DNA-hlahd
-  doc: Run restricted reads HLA-HD typing from normal DNA.
+- id: tumour_DNA_hlahd
+  label: tumour-DNA-hlahd
   in:
   - id: sample_name
     source: patient_id
+  - id: output_prefix
+    default: tumour_dna
+  - id: bowtie2_index_prefix_1
+    source: bowtie2_index_prefix
+  - id: read2_sequences
+    source: tumour_DNA_read2_sequences
+  - id: read1_sequences
+    source: tumour_DNA_read1_sequences
+  - id: bowtie2_index
+    source: bowtie2_index
+  - id: threads
+    source: alignment_threads
+  run: three_sample_hlatyping.cwl.steps/tumour_DNA_hlahd.cwl
+  out:
+  - id: hlahd_output
+  - id: hlahd_final
+- id: normal_DNA_hlahd
+  label: normal-DNA-hlahd
+  in:
+  - id: sample_name
+    source: patient_id
+  - id: output_prefix
+    default: normal_dna
+  - id: bowtie2_index_prefix_1
+    source: bowtie2_index_prefix
   - id: read2_sequences
     source: Normal_DNA_read2_sequences
   - id: read1_sequences
     source: Normal_DNA_read1_sequences
-  - id: bowtie2_index_prefix
-    source: bowtie2_index_prefix
   - id: bowtie2_index
     source: bowtie2_index
-  - id: output_prefix
-    default: normal_dna
-  run: three_sample_hlatyping.cwl.steps/normal_dna_hlahd.cwl
-  out:
-  - id: hla_fastq_reads1
-  - id: hla_fastq_reads2
-  - id: hlahd_output
-  - id: hlahd_final
-- id: hlahd_consensus_parser
-  label: hlahd-consensus-parser
-  in:
-  - id: tumour_dna
-    source: tumour_dna_hlahd/hlahd_final
-  - id: tumour_rna
-    source: tumour_rna_hlahd/hlahd_final
-  - id: normal_dna
-    source: normal_dna_hlahd/hlahd_final
-  - id: sample_name
-    source: patient_id
-  run: three_sample_hlatyping.cwl.steps/hlahd_consensus_parser.cwl
-  out:
-  - id: clin_sig_json
-  - id: consensus_txt
-  - id: tumour_json
-  - id: consensus_json
-  - id: germline_json
-  - id: rnaseq_json
-  - id: clin_sig_txt
-- id: tumour_dna_hlahd
-  label: tumout-DNA-hlahd
-  in:
-  - id: sample_name
-    source: patient_id
-  - id: read1_sequences
-    source: tumour_DNA_read1_sequences
-  - id: bowtie2_index_prefix
-    source: bowtie2_index_prefix
-  - id: bowtie2_index
-    source: bowtie2_index
-  - id: output_prefix
-    default: tumour_dna
-  - id: read2_sequences
-    source: tumour_DNA_read2_sequences
-  - id: to_subsample
-    default: false
-    source: to_subsample
-  - id: number_of_subsample_reads
-    source: number_of_subsample_reads
-  run: three_sample_hlatyping.cwl.steps/tumour_dna_hlahd.cwl
+  - id: threads
+    source: alignment_threads
+  run: three_sample_hlatyping.cwl.steps/normal_DNA_hlahd.cwl
   out:
   - id: hlahd_output
   - id: hlahd_final
-

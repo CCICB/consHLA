@@ -1,10 +1,10 @@
-cwlVersion: v1.2
+cwlVersion: v1.0
 class: CommandLineTool
 label: hla-report
 doc: |-
   # About this tool
 
-  This tool generates an HLA report from the output of consHLA.
+  This tool generates an HLA report from the output of disTIL HLA consensus HLA typing.
 
 requirements:
 - class: ShellCommandRequirement

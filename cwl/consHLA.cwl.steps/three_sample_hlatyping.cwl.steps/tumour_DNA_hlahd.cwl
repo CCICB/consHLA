@@ -1,6 +1,6 @@
-cwlVersion: v1.2
+cwlVersion: v1.0
 class: Workflow
-label: restricted-reads-hlahd
+label: restricted-reads-hlahd-simplified
 doc: |-
   # About this workflow
   This workflow runs fast HLA typing by restricting reads to those aligning with the HLA region prior to running HLA-HD.  
@@ -8,7 +8,7 @@ doc: |-
 
   ## Before running this workflow
   Prior to running this workflow, you must create/download a Bowtie2 Index (generated using `bowtie2 build`) for a reference file **which only includes the HLA region on chromosome 6**. We recommend using the HLA region reference `hla_gen.fasta` provided by IMGT. It can be downloaded from the IMGT GitHub repo [here](https://github.com/ANHIG/IMGTHLA/tree/Latest/fasta) or using this download link [ftp://ftp.ebi.ac.uk/pub/databases/ipd/imgt/hla/hla_gen.fasta](ftp://ftp.ebi.ac.uk/pub/databases/ipd/imgt/hla/hla_gen.fasta). The Bowtie2 Index files must then be archived using the `tar` command before being used as the Bowtie2 Index Archive input to this workflow.  
-  **A Bowtie2 index archive for `hla_gen.fasta` can be downloaded from the repo to be used as an input for this workflow. The corresponding Bowtie2 Index Prefix parameter should be `hla_gen`.**
+  **A Bowtie2 index archive for `hla_gen.fasta` can be downloaded from the disTIL repo to be used as an input for this workflow. The corresponding Bowtie2 Index Prefix parameter should be `hla_gen`.**
 
   ## Steps
   This workflow follows the steps recommended by the HLA-HD authors [here](https://www.genome.med.kyoto-u.ac.jp/HLA-HD/) under the subheadings Tips > Filtering of reads (March 6, 2019).
@@ -24,7 +24,6 @@ doc: |-
 
 requirements:
 - class: LoadListingRequirement
-- class: MultipleInputFeatureRequirement
 - class: InlineJavascriptRequirement
 - class: StepInputExpressionRequirement
 
@@ -33,33 +32,28 @@ inputs:
   label: Patient ID
   doc: Patient ID to be used for naming the output SAM.
   type: string
-- id: read1_sequences
-  label: Read 1 Sequences
-  doc: Read 1 sequences in FASTA or FASTQ format (may be bgzipped).
-  type: File
-- id: bowtie2_index_prefix
-  label: Bowtie2 Index Prefix
-  doc: |-
-    The prefix of index files contained in the Bowtie2 index TAR. Note that all Bowtie2 nidex files in the TAR should have this prefix.
-  type: string
-- id: bowtie2_index
-  label: Bowtie2 Index Archive
-  doc: |-
-    A TAR archive containing Bowtie2 index files. For the purposes of speeding up HLA-HD, this should be an archive of Bowtie2 index files for an HLA region reference, such as `hla_gen` provided by the IMGT.
-  type: File
 - id: output_prefix
   label: HLA-HD Output Prefix
   doc: Optional prefix for HLA-HD output files and directory.
   type: string?
+- id: bowtie2_index_prefix_1
+  label: Bowtie2 Index Prefix
+  doc: |-
+    The prefix of index files contained in the Bowtie2 index TAR. Note that all Bowtie2 nidex files in the TAR should have this prefix.
+  type: string
 - id: read2_sequences
   label: Read 2 Sequences
   doc: Read 2 sequences in FASTA or FASTQ format (may be bgzipped).
   type: File
-- id: to_subsample
-  label: to subsample?
-  type: boolean
-- id: number_of_subsample_reads
-  doc: The number of reads to subsample for read2
+- id: read1_sequences
+  label: Read 1 Sequences
+  doc: Read 1 sequences in FASTA or FASTQ format (may be bgzipped).
+  type: File
+- id: bowtie2_index
+  label: Bowtie2 Index Archive
+  doc: A TAR archive containing Bowtie2 index files.
+  type: File
+- id: threads
   type: int?
 
 outputs:
@@ -77,43 +71,18 @@ outputs:
   - hla_hd_1/hlahd_final_results
 
 steps:
-- id: bowtie2
-  label: bowtie2
-  doc: Run Bowtie2 alignment of input FASTQs to an HLA region reference.
-  in:
-  - id: bowtie2_index
-    source: bowtie2_index
-  - id: read1_sequences
-    source:
-    - read1_seqtk/subsampled_fastq
-    - read1_sequences
-    pickValue: first_non_null
-  - id: read2_sequences
-    source:
-    - read2_seqtk/subsampled_fastq
-    - read2_sequences
-    pickValue: first_non_null
-  - id: no_unaligned
-    default: true
-  - id: sample_name
-    source: sample_name
-  - id: bowtie2_index_prefix
-    source: bowtie2_index_prefix
-  run: tumour_dna_hlahd.cwl.steps/bowtie2.cwl
-  out:
-  - id: aligned_sam
 - id: samtools_view
   label: samtools-view
   in:
   - id: output_format
     default: BAM
   - id: input_alignment
-    source: bowtie2/aligned_sam
+    source: bowtie3/aligned_sam
   - id: fast_bam_compression
     default: true
   - id: exclude_reads_any
     default: '4'
-  run: tumour_dna_hlahd.cwl.steps/samtools_view.cwl
+  run: tumour_DNA_hlahd.cwl.steps/samtools_view.cwl
   out:
   - id: output_alignment
 - id: samtools_fastq_1
@@ -121,7 +90,7 @@ steps:
   in:
   - id: input_alignment
     source: samtools_view/output_alignment
-  run: tumour_dna_hlahd.cwl.steps/samtools_fastq_1.cwl
+  run: tumour_DNA_hlahd.cwl.steps/samtools_fastq_1.cwl
   out:
   - id: output_fastq_1
   - id: output_fastq_2
@@ -129,7 +98,7 @@ steps:
   label: hla-hd
   in:
   - id: threads
-    default: 2
+    source: threads
   - id: minimum_read_length
     default: 0
   - id: fastq_reads1
@@ -140,38 +109,27 @@ steps:
     source: sample_name
   - id: output_prefix
     source: output_prefix
-  run: tumour_dna_hlahd.cwl.steps/hla_hd_1.cwl
+  run: tumour_DNA_hlahd.cwl.steps/hla_hd_1.cwl
   out:
   - id: hlahd_results
   - id: hlahd_final_results
-- id: read2_seqtk
-  label: read2_seqtk
+- id: bowtie3
+  label: bowtie2
   in:
-  - id: seed
-    default: 123
-  - id: input_fastq
-    source: read2_sequences
-  - id: num_reads
-    source: number_of_subsample_reads
-  - id: custom_input
-    source: to_subsample
-  run: tumour_dna_hlahd.cwl.steps/read2_seqtk.cwl
-  when: $(inputs.custom_input)
-  out:
-  - id: subsampled_fastq
-- id: read1_seqtk
-  label: read1_seqtk
-  in:
-  - id: seed
-    default: 123
-  - id: input_fastq
+  - id: bowtie2_index
+    source: bowtie2_index
+  - id: read1_sequences
     source: read1_sequences
-  - id: num_reads
-    source: number_of_subsample_reads
-  - id: custom_input
-    source: to_subsample
-  run: tumour_dna_hlahd.cwl.steps/read1_seqtk.cwl
-  when: $(inputs.custom_input)
+  - id: read2_sequences
+    source: read2_sequences
+  - id: no_unaligned
+    default: true
+  - id: sample_name
+    source: sample_name
+  - id: bowtie2_index_prefix
+    source: bowtie2_index_prefix_1
+  - id: threads
+    source: threads
+  run: tumour_DNA_hlahd.cwl.steps/bowtie3.cwl
   out:
-  - id: subsampled_fastq
-
+  - id: aligned_sam
