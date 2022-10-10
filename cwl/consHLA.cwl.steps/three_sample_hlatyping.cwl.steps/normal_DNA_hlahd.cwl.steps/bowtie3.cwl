@@ -21,8 +21,7 @@ doc: |-
 requirements:
 - class: ShellCommandRequirement
 - class: ResourceRequirement
-  coresMin: 8
-  ramMin: 6000
+  coresMin: $(inputs.threads)
 - class: DockerRequirement
   dockerPull: biocontainers/bowtie2:v2.4.1_cv1
 - class: InitialWorkDirRequirement
