@@ -10,10 +10,6 @@ requirements:
 - class: ShellCommandRequirement
 - class: DockerRequirement
   dockerPull: alanwucci/conshla_report:1.0.0
-- class: InitialWorkDirRequirement
-  listing:
-  - $(inputs.clin_sig_hla)
-  - $(inputs.full_hla)
 - class: InlineJavascriptRequirement
 
 inputs:
@@ -46,7 +42,7 @@ arguments:
   position: 2
   valueFrom: |-
     ${
-        var cmd = 'Rscript -e "rmarkdown::render(\'hla_report_generator.Rmd\',params=list(full_hla_json=\'./' + inputs.full_hla.basename + '\', clin_hla_json=\'./' + inputs.clin_sig_hla.basename + '\', pid=\'' + inputs.patient_id + '\'), output_file=paste(\'' + inputs.patient_id + '\', \'_hlaReport.pdf\', sep=\'\'))\"'
+        var cmd = 'Rscript -e "rmarkdown::render(\'hla_report_generator.Rmd\',params=list(full_hla_json=\'' + inputs.full_hla.path + '\', clin_hla_json=\'' + inputs.clin_sig_hla.path + '\', pid=\'' + inputs.patient_id + '\'), output_file=paste(\'' + inputs.patient_id + '\', \'_hlaReport.pdf\', sep=\'\'))\"'
         return cmd
     }
   shellQuote: false
@@ -61,5 +57,6 @@ arguments:
 - prefix: ''
   position: 1
   valueFrom: |-
-    echo "RES" 1>&2 && head $(inputs.full_hla.basename) 1>&2 && echo "CLIN" 1>&2 && head $(inputs.clin_sig_hla.basename) 1>&2 &&
+    echo "RES" 1>&2 && head $(inputs.full_hla.path) 1>&2 && echo "CLIN" 1>&2 && head $(inputs.clin_sig_hla.path) 1>&2 &&
   shellQuote: false
+id: mwonge/ccicb-distil/hla-reports/3

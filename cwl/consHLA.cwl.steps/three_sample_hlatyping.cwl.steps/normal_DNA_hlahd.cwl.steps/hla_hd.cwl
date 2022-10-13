@@ -22,8 +22,11 @@ doc: |-
   - This tool uses the HLA dictionary created from release 3.15.0 of the [IPD-IMGT/HLA](https://github.com/ANHIG/IMGTHLA) database.
   - This tool by default uses HLA allele frequency data included with the HLA-HD release 1.4.0.
 
-requirements:
+hints:
 - class: ShellCommandRequirement
+- class: ResourceRequirement
+  coresMin: $(inputs.threads)
+  tmpdirMin: 102400
 - class: DockerRequirement
   dockerPull: pgc-images.sbgenomics.com/rbowen_james/hla-hd
 - class: InlineJavascriptRequirement
@@ -70,19 +73,6 @@ inputs:
   type: string?
 
 outputs:
-- id: hlahd_results
-  label: Output directory
-  doc: Directory containing results of the HLA-HD run.
-  type: Directory
-  outputBinding:
-    glob: |-
-      ${
-          if (!inputs.output_prefix) {
-              return inputs.sample_id + "_hlahd"
-          } else {
-              return inputs.sample_id + "_" + inputs.output_prefix + "_hlahd"
-          }
-      }
 - id: hlahd_final_results
   type: File
   outputBinding:
@@ -119,7 +109,7 @@ arguments:
 - prefix: ''
   position: 5
   valueFrom: ./
-  shellQuote: true
+  shellQuote: false
 - prefix: ''
   position: 6
   valueFrom: |-
@@ -154,4 +144,4 @@ arguments:
         }
     }
   shellQuote: false
-id: hla_hd
+id: mwonge/ccicb-distil/hla-hd/3

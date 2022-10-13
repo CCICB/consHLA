@@ -24,9 +24,6 @@ requirements:
   coresMin: $(inputs.threads)
 - class: DockerRequirement
   dockerPull: biocontainers/bowtie2:v2.4.1_cv1
-- class: InitialWorkDirRequirement
-  listing:
-  - $(inputs.bowtie2_index)
 - class: InlineJavascriptRequirement
   expressionLib:
   - |2-
@@ -143,7 +140,7 @@ arguments:
   position: 0
   valueFrom: |-
     ${
-        var ref = inputs.bowtie2_index.path.split('/').splice(-1)
+        var ref = inputs.bowtie2_index.path //.split('/').splice(-1)
         return "tar -xvf " + ref + " && rm " + ref + " &&"
     }
   shellQuote: false
@@ -151,4 +148,4 @@ arguments:
   position: 0
   valueFrom: bowtie2
   shellQuote: false
-id: bowtie2
+id: mwonge/ccicb-distil/bowtie2/4

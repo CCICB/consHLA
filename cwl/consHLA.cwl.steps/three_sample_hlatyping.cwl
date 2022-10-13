@@ -18,7 +18,7 @@ doc: |-
   - [HLA-HD](https://www.genome.med.kyoto-u.ac.jp/HLA-HD/)
 
 requirements:
-- class: LoadListingRequirement
+
 - class: SubworkflowFeatureRequirement
 - class: InlineJavascriptRequirement
 - class: StepInputExpressionRequirement
@@ -47,7 +47,6 @@ inputs:
   label: Patient ID
   type: string
 - id: bowtie2_index_prefix
-  label: HLA Bowtie2 Index Prefix
   type: string
 - id: RNA_read2_sequences
   label: RNA Read 2 Sequences
@@ -61,38 +60,31 @@ outputs:
 - id: clin_sig_json
   label: Clinically Significant HLA Consensus JSON
   type: File
-  outputSource:
-  - hla_consensus_parser/clin_sig_json
+  outputSource: hla_consensus_parser/clin_sig_json
 - id: consensus_txt
   label: HLA Consensus Text File
   type: File
-  outputSource:
-  - hla_consensus_parser/filtered_txt
+  outputSource: hla_consensus_parser/filtered_txt
 - id: sample1_json
   label: Tumour DNA HLA-HD Results JSON
   type: File
-  outputSource:
-  - hla_consensus_parser/tumour_dna_json
+  outputSource: hla_consensus_parser/tumour_dna_json
 - id: consensus_json
   label: HLA Consensus JSON
   type: File
-  outputSource:
-  - hla_consensus_parser/consensus_json
+  outputSource: hla_consensus_parser/consensus_json
 - id: sample2_json
   label: Normal DNA HLA-HD Results JSON
   type: File
-  outputSource:
-  - hla_consensus_parser/normal_dna_json
+  outputSource: hla_consensus_parser/normal_dna_json
 - id: sample3_json
   label: Tumour RNA HLA-HD Results JSON
   type: File?
-  outputSource:
-  - hla_consensus_parser/rna_json
+  outputSource: hla_consensus_parser/rna_json
 - id: clin_sig_txt
   label: Clinically Significant HLA Consensus Text File
   type: File
-  outputSource:
-  - hla_consensus_parser/clin_sig_txt
+  outputSource: hla_consensus_parser/clin_sig_txt
 
 steps:
 - id: hla_consensus_parser
@@ -122,19 +114,18 @@ steps:
     source: patient_id
   - id: output_prefix
     default: tumour_rna
-  - id: bowtie2_index_prefix_1
-    source: bowtie2_index_prefix
   - id: read2_sequences
     source: RNA_read2_sequences
   - id: read1_sequences
     source: RNA_read1_sequences
   - id: bowtie2_index
     source: bowtie2_index
+  - id: bowtie2_index_prefix
+    source: bowtie2_index_prefix
   - id: threads
     source: alignment_threads
   run: three_sample_hlatyping.cwl.steps/tumour_RNA_hlahd.cwl
   out:
-  - id: hlahd_output
   - id: hlahd_final
 - id: tumour_DNA_hlahd
   label: tumour-DNA-hlahd
@@ -143,19 +134,18 @@ steps:
     source: patient_id
   - id: output_prefix
     default: tumour_dna
-  - id: bowtie2_index_prefix_1
-    source: bowtie2_index_prefix
   - id: read2_sequences
     source: tumour_DNA_read2_sequences
   - id: read1_sequences
     source: tumour_DNA_read1_sequences
   - id: bowtie2_index
     source: bowtie2_index
+  - id: bowtie2_index_prefix
+    source: bowtie2_index_prefix
   - id: threads
     source: alignment_threads
   run: three_sample_hlatyping.cwl.steps/tumour_DNA_hlahd.cwl
   out:
-  - id: hlahd_output
   - id: hlahd_final
 - id: normal_DNA_hlahd
   label: normal-DNA-hlahd
@@ -164,8 +154,6 @@ steps:
     source: patient_id
   - id: output_prefix
     default: normal_dna
-  - id: bowtie2_index_prefix_1
-    source: bowtie2_index_prefix
   - id: read2_sequences
     source: Normal_DNA_read2_sequences
   - id: read1_sequences
@@ -174,7 +162,8 @@ steps:
     source: bowtie2_index
   - id: threads
     source: alignment_threads
+  - id: bowtie2_index_prefix
+    source: bowtie2_index_prefix
   run: three_sample_hlatyping.cwl.steps/normal_DNA_hlahd.cwl
   out:
-  - id: hlahd_output
   - id: hlahd_final

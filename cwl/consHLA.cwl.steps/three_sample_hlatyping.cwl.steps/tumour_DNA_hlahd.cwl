@@ -23,7 +23,7 @@ doc: |-
   - [Bowtie2](https://github.com/BenLangmead/bowtie2)
 
 requirements:
-- class: LoadListingRequirement
+
 - class: InlineJavascriptRequirement
 - class: StepInputExpressionRequirement
 
@@ -36,11 +36,6 @@ inputs:
   label: HLA-HD Output Prefix
   doc: Optional prefix for HLA-HD output files and directory.
   type: string?
-- id: bowtie2_index_prefix_1
-  label: Bowtie2 Index Prefix
-  doc: |-
-    The prefix of index files contained in the Bowtie2 index TAR. Note that all Bowtie2 nidex files in the TAR should have this prefix.
-  type: string
 - id: read2_sequences
   label: Read 2 Sequences
   doc: Read 2 sequences in FASTA or FASTQ format (may be bgzipped).
@@ -55,20 +50,18 @@ inputs:
   type: File
 - id: threads
   type: int?
+- id: bowtie2_index_prefix
+  label: Bowtie2 Index Prefix
+  doc: |-
+    The prefix of index files contained in the Bowtie2 index TAR. Note that all Bowtie2 nidex files in the TAR should have this prefix.
+  type: string
 
 outputs:
-- id: hlahd_output
-  label: HLA-HD Output
-  doc: Directory containing all HLA-HD output files.
-  type: Directory
-  outputSource:
-  - hla_hd_1/hlahd_results
 - id: hlahd_final
   label: HLA-HD Final Results File
   doc: The final results text file produced by HLA-HD.
   type: File
-  outputSource:
-  - hla_hd_1/hlahd_final_results
+  outputSource: hla_hd/hlahd_final_results
 
 steps:
 - id: samtools_view
@@ -94,25 +87,6 @@ steps:
   out:
   - id: output_fastq_1
   - id: output_fastq_2
-- id: hla_hd_1
-  label: hla-hd
-  in:
-  - id: threads
-    source: threads
-  - id: minimum_read_length
-    default: 0
-  - id: fastq_reads1
-    source: samtools_fastq_1/output_fastq_1
-  - id: fastq_reads2
-    source: samtools_fastq_1/output_fastq_2
-  - id: sample_id
-    source: sample_name
-  - id: output_prefix
-    source: output_prefix
-  run: tumour_DNA_hlahd.cwl.steps/hla_hd_1.cwl
-  out:
-  - id: hlahd_results
-  - id: hlahd_final_results
 - id: bowtie3
   label: bowtie2
   in:
@@ -127,9 +101,27 @@ steps:
   - id: sample_name
     source: sample_name
   - id: bowtie2_index_prefix
-    source: bowtie2_index_prefix_1
+    source: bowtie2_index_prefix
   - id: threads
     source: threads
   run: tumour_DNA_hlahd.cwl.steps/bowtie3.cwl
   out:
   - id: aligned_sam
+- id: hla_hd
+  label: hla-hd
+  in:
+  - id: threads
+    source: threads
+  - id: minimum_read_length
+    default: 0
+  - id: fastq_reads1
+    source: samtools_fastq_1/output_fastq_1
+  - id: fastq_reads2
+    source: samtools_fastq_1/output_fastq_2
+  - id: sample_id
+    source: sample_name
+  - id: output_prefix
+    source: output_prefix
+  run: tumour_DNA_hlahd.cwl.steps/hla_hd.cwl
+  out:
+  - id: hlahd_final_results
