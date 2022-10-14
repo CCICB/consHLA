@@ -96,4 +96,4 @@ arguments:
         return input_base + '.pe_2.fastq'
     }
   shellQuote: false
-id: samtools_fastq
+

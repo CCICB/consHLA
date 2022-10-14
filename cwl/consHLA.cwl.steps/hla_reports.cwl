@@ -59,4 +59,4 @@ arguments:
   valueFrom: |-
     echo "RES" 1>&2 && head $(inputs.full_hla.path) 1>&2 && echo "CLIN" 1>&2 && head $(inputs.clin_sig_hla.path) 1>&2 &&
   shellQuote: false
-id: mwonge/ccicb-distil/hla-reports/3
+

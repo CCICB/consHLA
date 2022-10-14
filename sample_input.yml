@@ -22,7 +22,5 @@ bowtie2_index:
   class: File
   path: /path/to/hla_gen.tar # Bowtie2 index generated from this reference: https://github.com/ANHIG/IMGTHLA/blob/Latest/hla_gen.fasta
 bowtie2_index_prefix: hla_gen # Whatever goes before .tar in bowtie2 index filename
-to_subsample: false
-number_of_subsample_reads: 100000000 # Optional, only required when to_subsample is True
 patient_id: my_patient
 

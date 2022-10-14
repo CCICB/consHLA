@@ -19,6 +19,9 @@ doc: |-
   - [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/manual.shtml)
 
 requirements:
+- class: InitialWorkDirRequirement
+  listing:
+  - $(inputs.bowtie2_index)
 - class: ShellCommandRequirement
 - class: ResourceRequirement
   coresMin: $(inputs.threads)
@@ -141,11 +144,11 @@ arguments:
   valueFrom: |-
     ${
         var ref = inputs.bowtie2_index.path //.split('/').splice(-1)
-        return "tar -xvf " + ref + " && rm " + ref + " &&"
+        return "tar -xvf " + ref  + " &&"
     }
   shellQuote: false
 - prefix: ''
   position: 0
   valueFrom: bowtie2
   shellQuote: false
-id: mwonge/ccicb-distil/bowtie2/4
+

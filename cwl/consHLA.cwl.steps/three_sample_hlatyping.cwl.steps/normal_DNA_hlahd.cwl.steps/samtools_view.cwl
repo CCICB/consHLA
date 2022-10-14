@@ -219,4 +219,4 @@ arguments:
         return input_base + ext
     }
   shellQuote: false
-id: samtools_view
+
