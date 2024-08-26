@@ -2,13 +2,14 @@
 title: "consensus HLA Report"
 output:
   pdf_document:
-  highlight: tango
+    highlight: tango
 number_sections: TRUE
 params:
   clin_hla_json: NAMESPACE
-  full_hla_json: NAMESPACE
+  germline_hla_json: NAMESPACE
+  tumour_hla_json: NAMESPACE
+  rna_hla_json: NAMESPACE
   pid: NAMESPACE
-  n_samples: NAMESPACE
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 subtitle: "`r paste('Patient ', params$pid)`"
 ---
@@ -20,99 +21,112 @@ library(knitr)
 library(kableExtra)
 library(stringr)
 
-date <- format(Sys.time(), '%d %B, %Y')
+date <- format(Sys.time(), "%d %B, %Y")
 ```
 
 
 This HLA report was generated using the consHLA toolkit on `r date`.
 
 # Summary of Clinically Relevant HLA Consensus Alleles
-## Class-I
 ```{r echo = FALSE}
 
-test <- '~/Downloads/P007301_threeSample_hla.consensus.json'
-test_clin <- '~/Downloads/P007301_threeSample_hla.consensus.clinSig.json'
+test <- "~/Downloads/P007301_threeSample_hla.consensus.json"
+test_clin <- "~/Downloads/P007301_threeSample_hla.consensus.clinSig.json"
 
 
 hla_from_json <- rjson::fromJSON(file = params$clin_hla_json)
 hla_df <- as.data.frame(hla_from_json)
 
-small_hla_df <- hla_df %>% select(HLA.A, HLA.B, HLA.C, HLA.DRA, HLA.DRB1, HLA.DRB3, HLA.DRB4, HLA.DRB5, HLA.DQA1, HLA.DQB1, HLA.DPA1, HLA.DPB1)
+small_hla_df <- hla_df %>%
+  select(
+    HLA.A, HLA.B, HLA.C, HLA.DRA, HLA.DRB1, HLA.DRB3, HLA.DRB4,
+    HLA.DRB5, HLA.DQA1, HLA.DQB1, HLA.DPA1, HLA.DPB1
+  )
 
-# Truncate to 2-field
-small_hla_df_trunc <- data.frame(lapply(small_hla_df, function(allele) {
-  # allele = toString(allele)
-  # print(allele)
-  # a1 <- str_split(allele, ", ")[[1]][1]
-  # a2 <- str_split(allele, ", ")[[2]][1]
-  
-  a1 <- allele[1]
-  a2 <- allele[2]
-  
-  a_list <- c()
-  for (al in c(a1, a2)) {
-    if (al == "Not typed") {
-      a_list <- c(a_list, al)
-    } else if (al == "No consensus") {
-      a_list <- c(a_list, al)
-    } else {
-      a_split <- str_split(al, ":")[[1]]
-      a_trunc = paste(a_split[1:2], collapse=":")
-      a_list <- c(a_list, a_trunc)
-    }
-  }
-  return(a_list)
-}))
+cols <- c("HLA-A", "HLA-B", "HLA-C", "HLA-DRA", "HLA-DRB1", "HLA-DRB3", "HLA-DRB4", "HLA-DRB5", "HLA-DQA1", "HLA-DQB1", "HLA-DPA1", "HLA-DPB1") # nolint
+colnames(small_hla_df) <- c("HLA-A", "HLA-B", "HLA-C", "HLA-DRA", "HLA-DRB1", "HLA-DRB3", "HLA-DRB4", "HLA-DRB5", "HLA-DQA1", "HLA-DQB1", "HLA-DPA1", "HLA-DPB1") # nolint
 
-cols <- c('HLA-A', 'HLA-B', 'HLA-C', 'HLA-DRA', 'HLA-DRB1', 'HLA-DRB3', 'HLA-DRB4', 'HLA-DRB5', 'HLA-DQA1', 'HLA-DQB1', 'HLA-DPA1', 'HLA-DPB1')
-colnames(small_hla_df_trunc) <- c('HLA-A', 'HLA-B', 'HLA-C', 'HLA-DRA', 'HLA-DRB1', 'HLA-DRB3', 'HLA-DRB4', 'HLA-DRB5', 'HLA-DQA1', 'HLA-DQB1', 'HLA-DPA1', 'HLA-DPB1')
-
-class_i <- small_hla_df_trunc[, c('HLA-A', 'HLA-B', 'HLA-C')]
-class_ii_a <- small_hla_df_trunc[, c('HLA-DRA', 'HLA-DRB1', 'HLA-DRB3', 'HLA-DRB4', 'HLA-DRB5')]
-class_ii_b <- small_hla_df_trunc[, c('HLA-DQA1', 'HLA-DQB1', 'HLA-DPA1', 'HLA-DPB1')]
+class_i <- small_hla_df[, c("HLA-A", "HLA-B", "HLA-C")]
+class_ii_a <- small_hla_df[, c("HLA-DRA", "HLA-DRB1", "HLA-DRB3", "HLA-DRB4", "HLA-DRB5")] # nolint
+class_ii_b <- small_hla_df[, c("HLA-DQA1", "HLA-DQB1", "HLA-DPA1", "HLA-DPB1")] # nolint
 
 ```
 
+## Class-I
 ```{r}
-kable(class_i, "latex", booktabs = T, escape = F, digits = 2, col.names = linebreak(c('HLA-A', 'HLA-B', 'HLA-C'), align = "c")) %>%
-  kable_styling(latex_options = c("HOLD_position", "striped"), full_width = F,position = 'left', font_size = 9)
+kable(class_i, "latex", booktabs = TRUE, escape = FALSE, digits = 2, col.names = linebreak(c("HLA-A", "HLA-B", "HLA-C"), align = "c")) %>% # nolint
+  kable_styling(latex_options = c("HOLD_position", "striped"), full_width = FALSE, position = "left", font_size = 9) # nolint
 ```
 ## Class-II
 ```{r}
-kable(class_ii_a, "latex", booktabs = T, escape = F, digits = 2, col.names = linebreak(c('HLA-DRA', 'HLA-DRB1', 'HLA-DRB3', 'HLA-DRB4', 'HLA-DRB5'), align = "c")) %>%
-  kable_styling(latex_options = c("HOLD_position", "striped"), full_width = F,position = 'left', font_size = 9)
-kable(class_ii_b, "latex", booktabs = T, escape = F, digits = 2, col.names = linebreak(c('HLA-DQA1', 'HLA-DQB1', 'HLA-DPA1', 'HLA-DPB1'), align = "c")) %>%
-  kable_styling(latex_options = c("HOLD_position", "striped"), full_width = F,position = 'left', font_size = 9)
+kable(class_ii_a, "latex", booktabs = TRUE, escape = FALSE, digits = 2, col.names = linebreak(c("HLA-DRA", "HLA-DRB1", "HLA-DRB3", "HLA-DRB4", "HLA-DRB5"), align = "c")) %>% # nolint
+  kable_styling(latex_options = c("HOLD_position", "striped"), full_width = FALSE,position = "left", font_size = 9) # nolint
+kable(class_ii_b, "latex", booktabs = TRUE, escape = FALSE, digits = 2, col.names = linebreak(c("HLA-DQA1", "HLA-DQB1", "HLA-DPA1", "HLA-DPB1"), align = "c")) %>% # nolint
+  kable_styling(latex_options = c("HOLD_position", "striped"), full_width = FALSE,position = "left", font_size = 9) # nolint
 ```
 
 \newpage
 
-# Consensus Alleles
+# All Alleles
 ```{r echo = FALSE}
-hla_from_json <- rjson::fromJSON(file = params$full_hla_json)
-hla_df <- as.data.frame(hla_from_json)
+germline_hla_json <- rjson::fromJSON(file = params$germline_hla_json)
+tumour_hla_json <- rjson::fromJSON(file = params$tumour_hla_json)
+rna_hla_json <- rjson::fromJSON(file = params$rna_hla_json)
+truncate_list <- function(x) {
+    if (length(x) > 2) {
+        return(paste(x[1:2], collapse = ", "))
+    } else {
+        return(paste(x, collapse = ", "))
+    }
+}
 
-small_hla_df <- hla_df
-cols <- c('HLA-A', 'HLA-B', 'HLA-C', 'HLA-DRB1', 'HLA-DQA1', 'HLA-DQB1', 'HLA-DPA1', 'HLA-DPB1', 'HLA-DMA', 'HLA-DMB', 'HLA-DOA','HLA-DOB','HLA-DRA', 'HLA-DRB2', 'HLA-DRB3', 'HLA-DRB4', 'HLA-DRB5', 'HLA-DRB6', 'HLA-DRB7', 'HLA-DRB8', 'HLA-DRB9', 'HLA-E', 'HLA-F', 'HLA-G', 'HLA-H', 'HLA-J', 'HLA-K', 'HLA-L', 'HLA-V')
-colnames(small_hla_df) <- cols
-small_hla_df <- small_hla_df[, c('HLA-A', 'HLA-B', 'HLA-C','HLA-DRA', 'HLA-DRB1', 'HLA-DRB3', 'HLA-DRB4', 'HLA-DRB5', 'HLA-DQA1', 'HLA-DQB1', 'HLA-DPA1', 'HLA-DPB1', 'HLA-DMA', 'HLA-DMB', 'HLA-DOA','HLA-DOB', 'HLA-DRB2',  'HLA-DRB6', 'HLA-DRB7', 'HLA-DRB8', 'HLA-DRB9', 'HLA-E', 'HLA-F', 'HLA-G', 'HLA-H', 'HLA-J', 'HLA-K', 'HLA-L', 'HLA-V')]
-t_df <- t(small_hla_df)
+germline_hla_data <- lapply(germline_hla_json, truncate_list)
+tumour_hla_data <- lapply(tumour_hla_json, truncate_list)
+rna_hla_data <- lapply(rna_hla_json, truncate_list)
 
-t_df <- cbind('HLA Gene' = rownames(t_df), t_df)
-rownames(t_df) <- 1:nrow(t_df)
-colnames(t_df) <- c('HLA Gene', 'Allele 1', 'Allele 2')
+germline_hla_df <- as.data.frame(germline_hla_data)
+tumour_hla_df <- as.data.frame(tumour_hla_data)
+rna_hla_df <- as.data.frame(rna_hla_data)
+
+cols <- c("HLA-A", "HLA-B", "HLA-C", "HLA-DRB1", "HLA-DQA1", "HLA-DQB1", "HLA-DPA1", "HLA-DPB1", "HLA-DMA", "HLA-DMB", "HLA-DOA","HLA-DOB","HLA-DRA", "HLA-DRB2", "HLA-DRB3", "HLA-DRB4", "HLA-DRB5", "HLA-DRB6", "HLA-DRB7", "HLA-DRB8", "HLA-DRB9", "HLA-E", "HLA-F", "HLA-G", "HLA-H", "HLA-J", "HLA-K", "HLA-L", "HLA-V") # nolint
+
+colnames(germline_hla_df) <- cols
+colnames(tumour_hla_df) <- cols
+colnames(rna_hla_df) <- cols
+
+t_germline_hla_df <- t(germline_hla_df)
+t_tumour_hla_df <- t(tumour_hla_df)
+t_rna_hla_df <- t(rna_hla_df)
+
+swap <- function(df, x, y) {
+  temp <- df[x, ]
+  df[x, ] <- df[y, ]
+  df[y, ] <- temp
+  return(df)
+}
+
+t_hla_df <- cbind("HLA Gene" = rownames(t_germline_hla_df), t_germline_hla_df, t_tumour_hla_df, t_rna_hla_df)
+t_hla_df <- swap(t_hla_df, 9, 13)
+t_hla_df <- swap(t_hla_df, 10, 15)
+t_hla_df <- swap(t_hla_df, 11, 16)
+t_hla_df <- swap(t_hla_df, 12, 17)
+
+rownames(t_hla_df) <- 1:nrow(t_hla_df) # nolint
+colnames(t_hla_df) <- c("HLA Gene", "Germline WGS", "Tumour WGS", "Tumour RNA-seq")
 ```
 
 ```{r}
-striped_rows <- seq(1,nrow(t_df),2)
-kable(t_df, "latex", booktabs = T, escape = F, digits = 2) %>%
-  kable_styling(latex_options = c("HOLD_position", "striped"), full_width = F, position = 'left', font_size = 9) %>%
-  row_spec(row=1:12, bold=T)
+striped_rows <- seq(1, nrow(t_hla_df), 2)
+kable(t_hla_df, "latex", booktabs = TRUE, escape = FALSE, digits = 2) %>%
+  kable_styling(latex_options = c("HOLD_position", "striped"), full_width = FALSE, position = "left", font_size = 9) %>% # nolint
+  row_spec(row = 1:12, bold = TRUE)
 ```
+
+\newpage
 
 # Appendix
 ## HLA Typing Method
 The consensus HLA typing module uses HLA-HD (v1.4.0) to conduct HLA typing from Tumour and Germline WGS and Tumour RNAseq (optional) for a given patient, producing two or three sets of candidate alleles. For each typed HLA gene, a pair of consensus alleles is calculated based on concordance between the candidate allele sets. 
 
-The first page of the HLA report displays a 'clinically significant' subset of HLA alleles in a format which mimics that of a clinical HLA report and is therefore familiar to clinicians. 
-The 'clinically significant' HLA subset includes most of the protein coding Class I and II HLA genes which are implicated in peptide presentation to T cells while excluding HLA Class I pseudogenes (HLA-H, -J, -K, -L, -V), non-classical Class I genes (HLA-E, -F, -G), Class II pseudogenes (HLA-DRB2, -DRB6, -DRB7, -DRB8, and -DRB9), and the non-classical Class II genes (HLA-DOA, -DOB, -DMA and -DMB). The second page of the report displays a table of all HLA alleles typed by the consHLA module (using HLA-HD), including the clinically relevant subset which is highlighted in bold text.  
+The first page of the HLA report displays a "clinically significant" subset of HLA alleles in a format which mimics that of a clinical HLA report and is therefore familiar to clinicians. 
+The "clinically significant" HLA subset includes most of the protein coding Class I and II HLA genes which are implicated in peptide presentation to T cells while excluding HLA Class I pseudogenes (HLA-H, -J, -K, -L, -V), non-classical Class I genes (HLA-E, -F, -G), Class II pseudogenes (HLA-DRB2, -DRB6, -DRB7, -DRB8, and -DRB9), and the non-classical Class II genes (HLA-DOA, -DOB, -DMA and -DMB). The second page of the report displays a table of all HLA alleles typed by the consHLA module (using HLA-HD), including the clinically relevant subset which is highlighted in bold text.  
