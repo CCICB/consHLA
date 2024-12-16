@@ -9,7 +9,7 @@ C: HLA-HD prediction (generate .txt and .json) <br>
 ### RAM Requirements (indicative only)
 RAM depend on input file size <br>
 For WGS results with 30x coverage: min RAM = 2Gb <br>
-For WGS results with 100x coverage and subsample to 30x: min RAM = 30Gb <br>
+For WGS results with 100x coverage: min RAM = 30Gb <br>
 
 ### Cloud platforms (recommended)
 You can run the workflow on any cloud platform supporting CWL execution (i.e. [Cavatica](https://cavatica.sbgenomics.com/))
