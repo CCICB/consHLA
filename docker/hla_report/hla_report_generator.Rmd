@@ -30,10 +30,6 @@ This HLA report was generated using the consHLA toolkit on `r date`.
 # Summary of Clinically Relevant HLA Consensus Alleles
 ```{r echo = FALSE}
 
-test <- "~/Downloads/P007301_threeSample_hla.consensus.json"
-test_clin <- "~/Downloads/P007301_threeSample_hla.consensus.clinSig.json"
-
-
 hla_from_json <- rjson::fromJSON(file = params$clin_hla_json)
 hla_df <- as.data.frame(hla_from_json)
 
