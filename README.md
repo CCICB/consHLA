@@ -1,6 +1,6 @@
 # consHLA
 A Next Generation Sequencing Consensus-based  HLA Typing Workflow Optimised for Pediatric Cancer Patients <br><br>
-![overall workflow](/assests/figures/consHLA_overall.png?)
+![overall workflow](https://github.com/CCICB/consHLA/blob/main/assets/figures/consHLA_overall.png)
 A: Bowtie2 Alignment to IMGT HLA reference (generate .sam) <br>
 B: Mapped reads extraction with samtools (generate .fastq.gz) <br>
 C: HLA-HD prediction (generate .txt and .json) <br>
