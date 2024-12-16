@@ -10,7 +10,7 @@ doc: |-
 requirements:
 - class: ShellCommandRequirement
 - class: DockerRequirement
-  dockerPull: alanwucci/conshla_report:2.0.0
+  dockerPull: alanwucci/conshla_report:2.1.0
 - class: InlineJavascriptRequirement
 
 inputs:
@@ -34,7 +34,7 @@ inputs:
 
 - id: rna_hla
   label: rna_hla
-  type: File
+  type: File?
 
 outputs:
 - id: hla_report
@@ -51,8 +51,13 @@ arguments:
   position: 2
   valueFrom: |-
     ${
-        var cmd = 'Rscript -e "rmarkdown::render(\'hla_report_generator.Rmd\',params=list(germline_hla_json=\'' + inputs.germline_hla.path + '\', tumour_hla_json=\'' + inputs.tumour_hla.path + '\', rna_hla_json=\'' + inputs.rna_hla.path + '\', clin_hla_json=\'' + inputs.clin_sig_hla.path + '\', pid=\'' + inputs.patient_id + '\'), output_file=paste(\'' + inputs.patient_id + '\', \'_hlaReport.pdf\', sep=\'\'))\"'
-        return cmd
+       if (inputs.rna_hla) {
+          var cmd = 'Rscript -e "rmarkdown::render(\'hla_report_generator.Rmd\',params=list(germline_hla_json=\'' + inputs.germline_hla.path + '\', tumour_hla_json=\'' + inputs.tumour_hla.path + '\', rna_hla_json=\'' + inputs.rna_hla.path + '\', clin_hla_json=\'' + inputs.clin_sig_hla.path + '\', pid=\'' + inputs.patient_id + '\'), output_file=paste(\'' + inputs.patient_id + '\', \'_hlaReport.pdf\', sep=\'\'))\"'
+          return cmd
+      } else {
+          var cmd = 'Rscript -e "rmarkdown::render(\'hla_report_generator.Rmd\',params=list(germline_hla_json=\'' + inputs.germline_hla.path + '\', tumour_hla_json=\'' + inputs.tumour_hla.path + '\', clin_hla_json=\'' + inputs.clin_sig_hla.path + '\', pid=\'' + inputs.patient_id + '\'), output_file=paste(\'' + inputs.patient_id + '\', \'_hlaReport.pdf\', sep=\'\'))\"'
+          return cmd
+      }
     }
   shellQuote: false
 - prefix: ''

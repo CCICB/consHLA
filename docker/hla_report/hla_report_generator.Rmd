@@ -8,7 +8,7 @@ params:
   clin_hla_json: NAMESPACE
   germline_hla_json: NAMESPACE
   tumour_hla_json: NAMESPACE
-  rna_hla_json: NAMESPACE
+  rna_hla_json: NULL
   pid: NAMESPACE
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 subtitle: "`r paste('Patient ', params$pid)`"
@@ -67,7 +67,10 @@ kable(class_ii_b, "latex", booktabs = TRUE, escape = FALSE, digits = 2, col.name
 ```{r echo = FALSE}
 germline_hla_json <- rjson::fromJSON(file = params$germline_hla_json)
 tumour_hla_json <- rjson::fromJSON(file = params$tumour_hla_json)
-rna_hla_json <- rjson::fromJSON(file = params$rna_hla_json)
+rna_hla_json <- NULL
+if (!is.null(params$rna_hla_json)) {
+  rna_hla_json <- rjson::fromJSON(file = params$rna_hla_json)
+}
 truncate_list <- function(x) {
     if (length(x) > 2) {
         return(paste(x[1:2], collapse = ", "))
@@ -78,21 +81,23 @@ truncate_list <- function(x) {
 
 germline_hla_data <- lapply(germline_hla_json, truncate_list)
 tumour_hla_data <- lapply(tumour_hla_json, truncate_list)
-rna_hla_data <- lapply(rna_hla_json, truncate_list)
+rna_hla_data <- if (!is.null(rna_hla_json)) lapply(rna_hla_json, truncate_list) else NULL
+
 
 germline_hla_df <- as.data.frame(germline_hla_data)
 tumour_hla_df <- as.data.frame(tumour_hla_data)
-rna_hla_df <- as.data.frame(rna_hla_data)
+rna_hla_df <- if (!is.null(rna_hla_data)) as.data.frame(rna_hla_data) else NULL
+
 
 cols <- c("HLA-A", "HLA-B", "HLA-C", "HLA-DRB1", "HLA-DQA1", "HLA-DQB1", "HLA-DPA1", "HLA-DPB1", "HLA-DMA", "HLA-DMB", "HLA-DOA","HLA-DOB","HLA-DRA", "HLA-DRB2", "HLA-DRB3", "HLA-DRB4", "HLA-DRB5", "HLA-DRB6", "HLA-DRB7", "HLA-DRB8", "HLA-DRB9", "HLA-E", "HLA-F", "HLA-G", "HLA-H", "HLA-J", "HLA-K", "HLA-L", "HLA-V") # nolint
 
 colnames(germline_hla_df) <- cols
 colnames(tumour_hla_df) <- cols
-colnames(rna_hla_df) <- cols
+if (!is.null(rna_hla_df)) colnames(rna_hla_df) <- cols
 
 t_germline_hla_df <- t(germline_hla_df)
 t_tumour_hla_df <- t(tumour_hla_df)
-t_rna_hla_df <- t(rna_hla_df)
+t_rna_hla_df <- if (!is.null(rna_hla_df)) t(rna_hla_df) else NULL
 
 swap <- function(df, x, y) {
   temp <- df[x, ]
@@ -101,49 +106,77 @@ swap <- function(df, x, y) {
   return(df)
 }
 
-t_hla_df <- cbind("HLA Gene" = rownames(t_germline_hla_df), t_germline_hla_df, t_tumour_hla_df, t_rna_hla_df)# nolint
+if (!is.null(t_rna_hla_df)) {
+  t_hla_df <- cbind("HLA Gene" = rownames(t_germline_hla_df), t_germline_hla_df, t_tumour_hla_df, t_rna_hla_df)
+  
+  rownames(t_hla_df) <- 1:nrow(t_hla_df)
+  colnames(t_hla_df) <- c("HLA Gene", "Germline WGS", "Tumour WGS", "Tumour RNA-seq")
+} else {
+  t_hla_df <- cbind("HLA Gene" = rownames(t_germline_hla_df), t_germline_hla_df, t_tumour_hla_df)
+  
+  rownames(t_hla_df) <- 1:nrow(t_hla_df)
+  colnames(t_hla_df) <- c("HLA Gene", "Germline WGS", "Tumour WGS")
+}
 t_hla_df <- swap(t_hla_df, 9, 13)
 t_hla_df <- swap(t_hla_df, 10, 15)
 t_hla_df <- swap(t_hla_df, 11, 16)
 t_hla_df <- swap(t_hla_df, 12, 17)
 
-determine_consensus <- function(germline, tumour, rna) {# nolint
+determine_consensus <- function(germline, tumour, rna=NULL) {# nolint
   germline_alleles <- sort(unlist(strsplit(germline, ", ")))
   tumour_alleles <- sort(unlist(strsplit(tumour, ", ")))
-  rna_alleles <- sort(unlist(strsplit(rna, ", ")))
-
-  if (grepl("Not typed", germline) || grepl("Not typed", tumour) || grepl("Not typed", rna)) {
-    return("Not determined")
-  }
-
-  if (identical(germline_alleles, tumour_alleles) && identical(tumour_alleles, rna_alleles)) {# nolint
-    return("Full Consensus")
-  } else if (identical(germline_alleles, tumour_alleles) && !identical(tumour_alleles, rna_alleles)) {# nolint
-    return("Tumour RNA-seq Discrepancy")
-  } else if (!identical(germline_alleles, tumour_alleles) && identical(tumour_alleles, rna_alleles)) {# nolint
-    return("Tumour Consensus")
-  } else if (!identical(germline_alleles, tumour_alleles) && !identical(tumour_alleles, rna_alleles) && identical(germline_alleles, rna_alleles)) {# nolint
-    return("Tumour WGS Discrepancy")
-  } else if (!identical(germline_alleles, tumour_alleles) && !identical(tumour_alleles, rna_alleles) && !identical(germline_alleles, rna_alleles)) {# nolint
-    return("Complete Discrepancy")
+  if (is.null(rna)) {
+    if (grepl("Not typed", germline) || grepl("Not typed", tumour)) {
+      return("Not determined")
+    }
+    if (identical(germline_alleles, tumour_alleles)) {
+      return("Full Consensus")
+    } else {
+      return("Tumour WGS Discrepancy")
+    }
   } else {
-    return("Undefined Discrepancy")
+    rna_alleles <- sort(unlist(strsplit(rna, ", ")))
+
+    if (grepl("Not typed", germline) || grepl("Not typed", tumour) || grepl("Not typed", rna)) {
+      return("Not determined")
+    }
+
+    if (identical(germline_alleles, tumour_alleles) && identical(tumour_alleles, rna_alleles)) {# nolint
+      return("Full Consensus")
+    } else if (identical(germline_alleles, tumour_alleles) && !identical(tumour_alleles, rna_alleles)) {# nolint
+      return("Tumour RNA-seq Discrepancy")
+    } else if (!identical(germline_alleles, tumour_alleles) && identical(tumour_alleles, rna_alleles)) {# nolint
+      return("Tumour Consensus")
+    } else if (!identical(germline_alleles, tumour_alleles) && !identical(tumour_alleles, rna_alleles) && identical(germline_alleles, rna_alleles)) {# nolint
+      return("Tumour WGS Discrepancy")
+    } else if (!identical(germline_alleles, tumour_alleles) && !identical(tumour_alleles, rna_alleles) && !identical(germline_alleles, rna_alleles)) {# nolint
+      return("Complete Discrepancy")
+    } else {
+      return("Undefined Discrepancy")
+    }
   }
 }
 
-rownames(t_hla_df) <- 1:nrow(t_hla_df) # nolint
-colnames(t_hla_df) <- c("HLA Gene", "Germline WGS", "Tumour WGS", "Tumour RNA-seq")# nolint
 
 
 add_consensus_column <- function(df) {
   df <- as.data.frame(df)
-  df <- df %>%
-    mutate(consensus = mapply(determine_consensus, df$"Germline WGS", df$"Tumour WGS", df$"Tumour RNA-seq"))
+  
+  # Modify to handle optional RNA column
+  if (ncol(df) == 4) {
+    df <- df %>%
+      mutate(consensus = mapply(determine_consensus, df$"Germline WGS", df$"Tumour WGS", df$"Tumour RNA-seq"))
+    colnames(df) <- c("HLA Gene", "Germline WGS", "Tumour WGS", "Tumour RNA-seq", "Consensus Status")
+  } else {
+    df <- df %>%
+      mutate(consensus = mapply(determine_consensus, df$"Germline WGS", df$"Tumour WGS"))
+    colnames(df) <- c("HLA Gene", "Germline WGS", "Tumour WGS", "Consensus Status")
+  }
+  
   return(df)
 }
 
 df_with_consensus <- add_consensus_column(t_hla_df)
-colnames(df_with_consensus) <- c("HLA Gene", "Germline WGS", "Tumour WGS", "Tumour RNA-seq", "Consensus Status")# nolint
 ```
 
 ```{r}
