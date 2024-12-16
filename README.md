@@ -18,7 +18,7 @@ You can also run consHLA on an instance of [Cromwell](https://github.com/microso
 The CWL script is compatible with Cromwell where the master CWL is `consHLA.cwl` and all dependencies are zipped in `consHLA_dependencies.zip`.
 
 
-### Local 
+### Local
 You will need to have a docker daemon available. <br>
 Running a `.cwl` workflow requires specific software. Here we pick `cwltool`. Install it following these [instructions](https://github.com/common-workflow-language/cwltool). `cwltool` usage is shown below <br>
 ```
