@@ -11,12 +11,8 @@ RAM depend on input file size <br>
 For WGS results with 30x coverage: min RAM = 2Gb <br>
 For WGS results with 100x coverage: min RAM = 30Gb <br>
 
-### Cloud platforms (recommended)
+### Cloud platforms
 You can run the workflow on any cloud platform supporting CWL execution (i.e. [Cavatica](https://cavatica.sbgenomics.com/))
-<br><br>
-You can also run consHLA on an instance of [Cromwell](https://github.com/microsoft/CromwellOnAzure) which utilises Azure backend. 
-The CWL script is compatible with Cromwell where the master CWL is `consHLA.cwl` and all dependencies are zipped in `consHLA_dependencies.zip`.
-
 
 ### Local
 You will need to have a docker daemon available. <br>
