@@ -13,6 +13,16 @@ For WGS results with 100x coverage: min RAM = 30Gb <br>
 
 ### Cloud platforms
 You can run the workflow on any cloud platform supporting CWL execution (i.e. [Cavatica](https://cavatica.sbgenomics.com/))
+<br><br>
+You can also run consHLA on an instance of [Cromwell](https://github.com/microsoft/CromwellOnAzure) which utilises [Azure backend](https://github.com/microsoft/CromwellOnAzure).
+Please use Cromwell <b>before version 80</b> because CWL was no longer supported after version 80. In addition, Cromwell only supports CWL v1.0 and the CWL scripts compatible with Cromwell are under `./cwl/v1.0`. 
+<br><br>
+Since CWL v1.0 does not support conditional execution of workflow steps, consHLA had to be split into two modes described as:
+<br>
+`./cwl/v1.0/consHLA WGS` contains the consHLA workflow that accepts two NGS inputs (germline and tumour WGS). Workflow dependencies are zipped. 
+<br>
+`./cwl/v1.0/consHLA WGS and RNA-seq` contains the consHLA workflow that accepts three NGS inputs (germline and tumour WGS and tumour RNA-seq). Workflow dependencies are zipped. 
+
 
 ### Local
 You will need to have a docker daemon available. <br>
@@ -26,9 +36,9 @@ You can run the whole or part of the consHLA workflow by specifing the `.cwl` fi
 ## Output files 
 `*_sample1_hla.json`: HLA alleles typed from tumour WGS <br>
 `*_sample2_hla.json`: HLA alleles typed from germline WGS <br>
-`*_sample3_hla.json`: HLA alleles typed from tumour RNAseq <br>
-`*_threeSample_hla.consensus.clinSig.[json|txt]`: Consensus HLA alleles for clinically significant genes <br>
-`*_threeSample_hla.consensus.[json|txt]`: Consensus HLA alleles for all genes <br>
+`*_sample3_hla.json`: HLA alleles typed from tumour RNAseq (optional) <br>
+`*_[three|two]Sample_hla.consensus.clinSig.[json|txt]`: Consensus HLA alleles for clinically significant genes <br>
+`*_[three|two]Sample_hla.consensus.[json|txt]`: Consensus HLA alleles for all genes <br>
 
 
 ## Test samples
