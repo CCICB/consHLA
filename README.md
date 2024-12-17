@@ -28,7 +28,7 @@ Since CWL v1.0 does not support conditional execution of workflow steps, consHLA
 You will need to have a docker daemon available. <br>
 Running a `.cwl` workflow requires specific software. Here we pick `cwltool`. Install it following these [instructions](https://github.com/common-workflow-language/cwltool). `cwltool` usage is shown below <br>
 ```
-cwltool --basedir . ./cwl/consHLA.cwl ./sample_input.yml
+cwltool --basedir . ./cwl/v1.2/consHLA.cwl ./sample_input.yml
 ```
 You can run the whole or part of the consHLA workflow by specifing the `.cwl` file and supplying the correct `input.yml`
 
