@@ -1,9 +1,12 @@
 # consHLA
 A Next Generation Sequencing Consensus-based HLA Typing Workflow <br><br>
-![overall workflow](https://github.com/CCICB/consHLA/blob/main/assets/figures/consHLA_workflow.png?)
-A: Bowtie2 Alignment to IMGT HLA reference (generate .sam) <br>
-B: Mapped reads extraction with samtools (generate .fastq.gz) <br>
-C: HLA-HD prediction (generate .txt and .json) <br>
+![overall workflow](https://github.com/CCICB/consHLA/blob/main/assets/figures/consHLA_workflow.png?) <br><br>
+
+The sub-workflow (blue box) <br>
+A: Bowtie2 Alignment to IMGT HLA reference (generates .sam) <br>
+B: Mapped reads extraction with samtools (generates .fastq.gz) <br>
+C: HLA typing with [HLA-HD](https://www.genome.med.kyoto-u.ac.jp/HLA-HD/) (generates .txt and .json) <br>
+![sub workflow](https://github.com/CCICB/consHLA/blob/main/assets/figures/consHLA_prediction.png?)
 
 ## Running the workflow
 ### RAM Requirements (indicative only)
