@@ -15,16 +15,15 @@ For WGS results with 30x coverage: min RAM = 2Gb <br>
 For WGS results with 100x coverage: min RAM = 30Gb <br>
 
 ### Cloud platforms
-You can run the workflow on any cloud platform supporting CWL execution (i.e. [Cavatica](https://cavatica.sbgenomics.com/))
+You can run the workflow (cwl v1.0 or v1.2) on any cloud platform supporting CWL execution (i.e. [Cavatica](https://cavatica.sbgenomics.com/))
 <br><br>
 You can also run consHLA on an instance of [Cromwell](https://github.com/microsoft/CromwellOnAzure) which utilises [Azure backend](https://github.com/microsoft/CromwellOnAzure).
-Please use Cromwell <b>before version 80</b> because CWL was no longer supported after version 80. In addition, Cromwell only supports CWL v1.0 and the CWL scripts compatible with Cromwell are under `./cwl/v1.0`. 
+Please use Cromwell <b>version 79 or earlier</b> because CWL was no longer supported after version 79. In addition, Cromwell only supports CWL v1.0 and the consHLA compatible with Cromwell are under `./cwl/v1.0`. 
 <br><br>
 Since CWL v1.0 does not support conditional execution of workflow steps, consHLA in cwl v1.0 had to be split into two modes as:
 <br>
-`./cwl/v1.0/consHLA WGS` contains the consHLA workflow that accepts two NGS inputs (germline and tumour WGS). Workflow dependencies are zipped. 
-<br>
-`./cwl/v1.0/consHLA WGS and RNA-seq` contains the consHLA workflow that accepts three NGS inputs (germline and tumour WGS and tumour RNA-seq). Workflow dependencies are zipped. 
+- `./cwl/v1.0/consHLA WGS` contains the consHLA workflow that accepts two NGS inputs (germline and tumour WGS). Workflow dependencies are zipped. 
+- `./cwl/v1.0/consHLA WGS and RNA-seq` contains the consHLA workflow that accepts three NGS inputs (germline and tumour WGS and tumour RNA-seq). Workflow dependencies are zipped. 
 
 
 ### Local
