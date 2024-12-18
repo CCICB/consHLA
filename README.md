@@ -20,7 +20,7 @@ You can run the workflow on any cloud platform supporting CWL execution (i.e. [C
 You can also run consHLA on an instance of [Cromwell](https://github.com/microsoft/CromwellOnAzure) which utilises [Azure backend](https://github.com/microsoft/CromwellOnAzure).
 Please use Cromwell <b>before version 80</b> because CWL was no longer supported after version 80. In addition, Cromwell only supports CWL v1.0 and the CWL scripts compatible with Cromwell are under `./cwl/v1.0`. 
 <br><br>
-Since CWL v1.0 does not support conditional execution of workflow steps, consHLA had to be split into two modes described as:
+Since CWL v1.0 does not support conditional execution of workflow steps, consHLA in cwl v1.0 had to be split into two modes as:
 <br>
 `./cwl/v1.0/consHLA WGS` contains the consHLA workflow that accepts two NGS inputs (germline and tumour WGS). Workflow dependencies are zipped. 
 <br>
